@@ -1,0 +1,21 @@
+---
+# Add in the details about the exiftool data per operating system
+os:
+  Windows: "extras/exiftool-12.40/exiftool.exe"
+
+# supported extension list
+formats: [".mp4", ".mov"]
+
+# tags to get
+tags: 
+  default:
+    FileName: Name # Name of the file
+    FileSize: Size # Total size of the file in human readable format
+    FileType: Format # What file format is this
+    CreateDate: Created # What date it was created on
+    VideoFrameRate: FPS # Frame rate of the video
+    DurationValue: Frames # Number of frames in the video
+    Duration: Duration # Duration in human readable (eg 19.45 seconds)
+    ImageSize: Resolution # Display resolution of the video
+    CompressorName: Encoding # What encoding is used
+    VideoFormatVideoLayoutAspectRatio: AspectRatio # Is it 16:9 or 3:4 
