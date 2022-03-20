@@ -1,10 +1,26 @@
 ---
 # Add in the details about the exiftool data per operating system
-os:
-  Windows: "extras/exiftool-12.40/exiftool.exe"
+tools:
+  # We want the fully qualified paths and note relative paths
+  exiftool:
+    # IMPORTANT: For exiftool do not use exiftool(-k).exe, just rename
+    # it to ensure it doesn't ask for confirmation on exit during cmd run
+    Windows: ".extras/exiftool-12.40/exiftool.exe"
+    Darwin: "/usr/local/bin/exiftool"
+  ffmpeg:
+    Windows: ""
+    Darwin: "/usr/local/bin/ffmpeg"
+
 
 # supported extension list
 formats: [".mp4", ".mov"]
+
+# What size the thumbnails should be
+factor: 0.25 # 1/4th the size of the actual resolution, 1920x1080 will
+             # have 480x270 size thumnails
+
+# how many frames you want to get out of the vidoe
+framecount: 5
 
 # tags to get
 tags: 

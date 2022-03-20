@@ -8,6 +8,7 @@ import xxhash
 import tempfile
 import json
 
+# internal import
 from base import get_config, GETTAGS_COMMAND
 
 class VideoInfo(object):
@@ -76,7 +77,8 @@ class VideoInfo(object):
     def _process_video_props(self):
         property_data = dict()
         _os = platform.system()
-        tool_path = os.path.realpath(self.configs.get("os").get(_os))
+        tools_config = self.config.get("tools")
+        tool_path = tools.get("exiftool").get(_os)
         if not tool_path or not os.path.exists(tool_path):
             raise RuntimeError("Invalid EXIFTOOL path {0}".format(tool_path))
         
@@ -117,8 +119,10 @@ class VideoInfo(object):
                 continue
             property_data[tags_dict.get(_key)] = _value.get('val')
 
+        # We would also like to add xxhash-64 as one of the items in the
+        # dictionary
+        property_data["xxhash-64"] = self.hash
         return property_data
-
 
     def _gen_hash(self):
         """_summary_
