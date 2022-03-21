@@ -6,6 +6,11 @@ SELF_PATH = os.path.realpath(__file__)
 SELF_DIR_PATH = os.path.dirname(SELF_PATH)
 CONFIG_PATH = os.path.realpath(os.path.join(SELF_DIR_PATH, "../..", "config.yml"))
 GETTAGS_COMMAND = '"{toolpath}" -args -T -{tags} {video} -j > {output}'
+# Frames export command
+EXPORT_FRAMES = "{ffmpeg_cmd} -i {input} " \
+                "-vf scale={scale},setdar={aspect},select='{frameselect}' " \
+                "-vsync 0 {output}"
+FRAMES_SEL = "eq(n\,{frame})"
 
 
 def get_config():
