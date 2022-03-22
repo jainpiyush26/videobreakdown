@@ -9,9 +9,14 @@ import tempfile
 import json
 
 # internal import
-from base import get_config, GETTAGS_COMMAND
+from .base import get_config, GETTAGS_COMMAND
 
 class VideoInfo(object):
+    """_summary_
+
+    Args:
+        object (_type_): _description_
+    """
     def __init__(self, video_path):
         """_summary_
 
@@ -74,11 +79,31 @@ class VideoInfo(object):
         """
         return self._process_video_props()
 
+    @property
+    def name(self):
+        """_summary_
+
+        Returns:
+            _type_: _description_
+        """
+        base_name = os.path.basename(self.video_path)
+        _name = os.path.splitext(base_name)[0]
+        return _name
+
     def _process_video_props(self):
+        """_summary_
+
+        Raises:
+            RuntimeError: _description_
+            RuntimeError: _description_
+
+        Returns:
+            _type_: _description_
+        """
         property_data = dict()
         _os = platform.system()
-        tools_config = self.config.get("tools")
-        tool_path = tools.get("exiftool").get(_os)
+        tools_config = self.configs.get("tools")
+        tool_path = tools_config.get("exiftool").get(_os)
         if not tool_path or not os.path.exists(tool_path):
             raise RuntimeError("Invalid EXIFTOOL path {0}".format(tool_path))
         
@@ -133,12 +158,7 @@ class VideoInfo(object):
         hasher = xxhash.xxh64()
         with open(self.video_path, "rb") as file_open:
             buffer = file_open.read(self._hash_block)
-            with len(buffer) > 0:
+            while len(buffer) > 0:
                 hasher.update(buffer)
                 buffer = file_open.read(self._hash_block)
         return hasher.hexdigest()
-
-
-
-data = VideoInfo(video_path=r"D:\work\python_dev\videobreakdown\extras\sample_videos\20220217_DOC_2785.MP4")
-print(data.videoprops)

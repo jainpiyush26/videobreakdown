@@ -9,7 +9,7 @@ GETTAGS_COMMAND = '"{toolpath}" -args -T -{tags} {video} -j > {output}'
 # Frames export command
 EXPORT_FRAMES = "{ffmpeg_cmd} -i {input} " \
                 "-vf scale={scale},setdar={aspect},select='{frameselect}' " \
-                "-vsync 0 {output}"
+                "-vsync 0 {output} -hide_banner -loglevel error"
 FRAMES_SEL = "eq(n\,{frame})"
 
 

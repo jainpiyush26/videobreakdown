@@ -5,10 +5,12 @@ tools:
   exiftool:
     # IMPORTANT: For exiftool do not use exiftool(-k).exe, just rename
     # it to ensure it doesn't ask for confirmation on exit during cmd run
-    Windows: ".extras/exiftool-12.40/exiftool.exe"
+    # NOTE: I would recommend using forward slashes for windows paths as well!
+    Windows: "D:/work/python_dev/videobreakdown/extras/exiftool-12.40/exiftool.exe"
     Darwin: "/usr/local/bin/exiftool"
   ffmpeg:
-    Windows: ""
+    # NOTE: use forward slashes for windows paths!
+    Windows: "D:/work/python_dev/videobreakdown/extras/ffmpeg/bin/ffmpeg.exe"
     Darwin: "/usr/local/bin/ffmpeg"
 
 
