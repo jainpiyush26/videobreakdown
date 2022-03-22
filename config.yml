@@ -18,7 +18,7 @@ tools:
 formats: [".mp4", ".mov"]
 
 # What size the thumbnails should be
-factor: 0.25 # 1/4th the size of the actual resolution, 1920x1080 will
+factor: 0.1 # 1/10th the size of the actual resolution, 1920x1080 will
              # have 480x270 size thumnails
 
 # how many frames you want to get out of the vidoe
