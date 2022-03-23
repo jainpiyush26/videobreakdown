@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # std imports
 import os
-import re
 from subprocess import Popen, PIPE, call
 import platform
 import xxhash
@@ -45,7 +44,7 @@ class VideoInfo(object):
             _type_: _description_
         """
         return os.path.exists(self.video_path)
-    
+
     @property
     def fileext(self):
         """_summary_
@@ -69,7 +68,7 @@ class VideoInfo(object):
         if extension.lower() in config_data.get("formats"):
             return True
         return False
-    
+
     @property
     def videoprops(self):
         """_summary_
@@ -101,12 +100,17 @@ class VideoInfo(object):
             _type_: _description_
         """
         property_data = dict()
+
+        # We would also like to add xxhash-64 as one of the items in the
+        # dictionary
+        property_data["xxhash-64"] = self.hash
+
         _os = platform.system()
         tools_config = self.configs.get("tools")
         tool_path = tools_config.get("exiftool").get(_os)
         if not tool_path or not os.path.exists(tool_path):
             raise RuntimeError("Invalid EXIFTOOL path {0}".format(tool_path))
-        
+
         full_tags_dict = self.configs.get("tags")
         tags_dict = full_tags_dict.get("default")
 
@@ -114,7 +118,7 @@ class VideoInfo(object):
         # Let's add any specific tags as per the formats
         if _ext.lower() in full_tags_dict.keys():
             tags_dict.update(full_tags_dict.get(_ext.lower()))
-        
+
         tags_string = " -".join(tags_dict.keys())
         output_file = tempfile.NamedTemporaryFile(delete=False)
         output_file.close()
@@ -122,9 +126,9 @@ class VideoInfo(object):
                                          tags=tags_string,
                                          video=self.video_path,
                                          output=output_file.name)
-        
+
         command_exec = Popen(command, shell=True, stderr=PIPE, stdout=PIPE)
-        std_out, std_err = command_exec.communicate()
+        _, std_err = command_exec.communicate()
         if command_exec.returncode != 0:
             raise RuntimeError(std_err)
 
@@ -144,16 +148,13 @@ class VideoInfo(object):
                 continue
             property_data[tags_dict.get(_key)] = _value.get('val')
 
-        # We would also like to add xxhash-64 as one of the items in the
-        # dictionary
-        property_data["xxhash-64"] = self.hash
         return property_data
 
     def _gen_hash(self):
         """_summary_
 
         Returns:
-            _type_: _description_   
+            _type_: _description_
         """
         hasher = xxhash.xxh64()
         with open(self.video_path, "rb") as file_open:

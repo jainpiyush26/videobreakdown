@@ -13,6 +13,10 @@ tools:
     Windows: "D:/work/python_dev/videobreakdown/extras/ffmpeg/bin/ffmpeg.exe"
     Darwin: "/usr/local/bin/ffmpeg"
 
+# Exporting pdf size
+pdf:
+  size: "A4" # We use the standards paper formats or custom list [width, height]
+  orientation: "landscape" # This can only be landscape or potrait
 
 # supported extension list
 formats: [".mp4", ".mov"]
@@ -25,15 +29,14 @@ factor: 0.1 # 1/10th the size of the actual resolution, 1920x1080 will
 framecount: 5
 
 # tags to get
-tags: 
+tags:
   default:
-    FileName: Name # Name of the file
     FileSize: Size # Total size of the file in human readable format
     FileType: Format # What file format is this
     CreateDate: Created # What date it was created on
-    VideoFrameRate: FPS # Frame rate of the video
-    DurationValue: Frames # Number of frames in the video
-    Duration: Duration # Duration in human readable (eg 19.45 seconds)
     ImageSize: Resolution # Display resolution of the video
     CompressorName: Encoding # What encoding is used
-    VideoFormatVideoLayoutAspectRatio: AspectRatio # Is it 16:9 or 3:4 
+    VideoFrameRate: FPS # Frame rate of the video
+    Duration: Duration # Duration in human readable (eg 19.45 seconds)
+    DurationValue: Frames # Number of frames in the video
+    VideoFormatVideoLayoutAspectRatio: AspectRatio # Is it 16:9 or 3:2
