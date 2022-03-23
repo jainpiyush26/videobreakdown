@@ -17,7 +17,7 @@ class VideoFrames(object):
     Args:
         object (_type_): _description_
     """
-    def __init__(self, video_path, video_name, video_framecount, aspect,
+    def __init__(self, video_path, video_name, video_framecount,
                  resolution):
         """_summary_
 
@@ -31,7 +31,6 @@ class VideoFrames(object):
         self.video_path = video_path
         self.name = video_name
         self.video_framecount = video_framecount
-        self.aspect = aspect
         self.resolution = resolution
 
         self.config = get_config()
@@ -64,8 +63,10 @@ class VideoFrames(object):
         # Create the scale command
         scale = "x".join([str(int(float(item) * self.config.get("factor"))) for
                          item in self.resolution.split("x")])
-        # aspect ratio is forward slash instead of colon
-        aspect = self.aspect.replace(":", "/")
+
+        # We will be changing the height to -1 to maintain the aspect ratio
+        width, _ = scale.split("x")
+        updt_scale = "{0}x-1".format(width)
 
         # Create the output directory
         output_dir = os.path.join(tempfile.gettempdir(),
@@ -79,7 +80,7 @@ class VideoFrames(object):
                                      "{name}.%04d.jpeg".format(name=self.name))
         export_cmd = EXPORT_FRAMES.format(ffmpeg_cmd=tool_cmd,
                                           input=self.video_path,
-                                          scale=scale, aspect=aspect,
+                                          scale=updt_scale,
                                           frameselect=frames_string,
                                           output=output_frames)
         # Execute the command

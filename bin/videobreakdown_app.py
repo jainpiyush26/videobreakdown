@@ -13,15 +13,15 @@ from videobreakdown.videoinfo import VideoInfo
 from videobreakdown.videoframes import VideoFrames
 
 
-path = video_path=r"D:\work\python_dev\videobreakdown\extras\sample_videos\20220217_DOC_2785.MP4"
+path =r"D:\work\python_dev\videobreakdown\extras\sample_videos\20220217_DOC_2785.MP4"
+path =r"/Users/piyush/Downloads/DJI_0262.MOV"
 data = VideoInfo(video_path=path)
 info = data.videoprops
-
-frames_obj = VideoFrames(video_path=path,
-                         video_name=data.name,
-                         aspect=info.get("AspectRatio"),
-                         video_framecount=info.get("Frames"),
-                         resolution=info.get("Resolution"))
-frames_output = frames_obj.export_frames()
+print (info)
+# frames_obj = VideoFrames(video_path=path,
+#                          video_name=data.name,
+#                          video_framecount=info.get("Frames"),
+#                          resolution=info.get("Resolution"))
+# frames_output = frames_obj.export_frames()
 
 

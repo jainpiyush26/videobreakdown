@@ -35,8 +35,11 @@ tags:
     FileType: Format # What file format is this
     CreateDate: Created # What date it was created on
     ImageSize: Resolution # Display resolution of the video
-    CompressorName: Encoding # What encoding is used
+    CompressorID: Encoding # What encoding is used
     VideoFrameRate: FPS # Frame rate of the video
     Duration: Duration # Duration in human readable (eg 19.45 seconds)
-    DurationValue: Frames # Number of frames in the video
+  mp4:
     VideoFormatVideoLayoutAspectRatio: AspectRatio # Is it 16:9 or 3:2
+  calculated: # We will be multiplying these will be calculated values
+              # from the existing inputs
+    Frames: [Duration, FPS]

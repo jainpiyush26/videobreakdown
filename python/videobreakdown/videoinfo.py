@@ -113,6 +113,7 @@ class VideoInfo(object):
 
         full_tags_dict = self.configs.get("tags")
         tags_dict = full_tags_dict.get("default")
+        calculated_dict = full_tags_dict.get("calculated")
 
         _ext = self.fileext
         # Let's add any specific tags as per the formats
@@ -148,6 +149,13 @@ class VideoInfo(object):
                 continue
             property_data[tags_dict.get(_key)] = _value.get('val')
 
+        # We need to get the calculated values
+        print (calculated_dict)
+        # for keys, values in calculated_dict.items():
+        #     key_value = 0
+        #     for _value in values:
+        #         key_value *= property_data[_value]
+        #     property_data[keys] = key_value
         return property_data
 
     def _gen_hash(self):
