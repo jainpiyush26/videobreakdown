@@ -37,9 +37,7 @@ tags:
     ImageSize: Resolution # Display resolution of the video
     CompressorID: Encoding # What encoding is used
     VideoFrameRate: FPS # Frame rate of the video
-    Duration: Duration # Duration in human readable (eg 19.45 seconds)
-  mp4:
-    VideoFormatVideoLayoutAspectRatio: AspectRatio # Is it 16:9 or 3:2
+    Duration: Duration # Duration of the video in timecode
   calculated: # We will be multiplying these will be calculated values
               # from the existing inputs
     Frames: [Duration, FPS]

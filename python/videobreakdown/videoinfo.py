@@ -6,6 +6,7 @@ import platform
 import xxhash
 import tempfile
 import json
+from datetime import datetime
 
 # internal import
 from .base import get_config, GETTAGS_COMMAND
@@ -89,6 +90,29 @@ class VideoInfo(object):
         _name = os.path.splitext(base_name)[0]
         return _name
 
+    def _get_frames(self, time_duration, fps):
+        """_summary_
+
+        :param time_duration: _description_
+        :type time_duration: _type_
+        :param fps: _description_
+        :type fps: _type_
+        :return: _description_
+        :rtype: _type_
+        """
+        # We need to create a time object to calculate the frames
+        time_obj = None
+        if ":" in time_duration:
+            time_obj = datetime.strptime(time_duration, "%H:%M:%S")
+        else:
+            time_obj = datetime.strptime(time_duration, "%S.%f s")
+        print (time_obj.microsecond)
+        total_seconds = (time_obj.hour * 3600) + (time_obj.minute * 60) \
+                        + (time_obj.second) + (time_obj.microsecond/1000000)
+        total_frames = int(total_seconds * fps)
+
+        return total_frames
+
     def _process_video_props(self):
         """_summary_
 
@@ -147,15 +171,17 @@ class VideoInfo(object):
             # values (like sourcename)
             if _key not in tags_dict.keys():
                 continue
-            property_data[tags_dict.get(_key)] = _value.get('val')
+            keyvalue = _value.get('val')
+
+            property_data[tags_dict.get(_key)] = keyvalue
 
         # We need to get the calculated values
-        print (calculated_dict)
-        # for keys, values in calculated_dict.items():
-        #     key_value = 0
-        #     for _value in values:
-        #         key_value *= property_data[_value]
-        #     property_data[keys] = key_value
+        for key, values in calculated_dict.items():
+            # NOTE: This will have to be updated to get the correct
+            # logic for any new calculated value!
+            if key == "Frames":
+                property_data[key] = self._get_frames(
+                    *[property_data.get(_val) for _val in values])
         return property_data
 
     def _gen_hash(self):

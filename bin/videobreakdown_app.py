@@ -15,6 +15,8 @@ from videobreakdown.videoframes import VideoFrames
 
 path =r"D:\work\python_dev\videobreakdown\extras\sample_videos\20220217_DOC_2785.MP4"
 path =r"/Users/piyush/Downloads/DJI_0262.MOV"
+#path =r"/Users/piyush/Downloads/20220217_DOC_2785.MP4"
+
 data = VideoInfo(video_path=path)
 info = data.videoprops
 print (info)
