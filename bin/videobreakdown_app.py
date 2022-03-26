@@ -20,6 +20,7 @@ path =r"/Users/piyush/Downloads/DJI_0262.MOV"
 data = VideoInfo(video_path=path)
 info = data.videoprops
 print (info)
+
 # frames_obj = VideoFrames(video_path=path,
 #                          video_name=data.name,
 #                          video_framecount=info.get("Frames"),

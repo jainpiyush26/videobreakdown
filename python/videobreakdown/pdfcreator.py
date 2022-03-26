@@ -1,9 +1,13 @@
 #!/usr/bin/env python
-# std import
+# std imports
 from fileinput import filename
 import os
+
+# third party imports
 from reportlab.pdfgen import canvas
 from reportlab.lib import pagesizes
+from reportlab.lib.units import mm
+from reportlab.lib.colors import darkblue, gray, black
 
 # internal imports
 from base import get_config
@@ -61,11 +65,72 @@ class PdfCreator(object):
                                " exists!".format(self.export_path))
 
         canvas_obj = canvas.Canvas(filename=self.export_path,
-                                   pagesize=(width, height))
+                                   pagesize=(width, height),
+                                   bottomup=0)
 
         return canvas_obj
 
 
+path = "/Users/piyush/Documents/PersonalFolders/coding_work/pdf_creation_test/001.pdf"
+if os.path.exists(path):
+    os.remove(path)
+data = PdfCreator({}, path)
+canvas = data._create_canvas()
 
-data = PdfCreator({}, "")
-data._create_canvas()
+sample_dict = {'xxhash-64': '1a9990ea6f727531',
+               'Size': '220 MiB',
+               'Format': 'MOV',
+               'Created': '2022:02:17 17:03:05',
+               'Resolution': '3840x2160',
+               'Encoding': 'hvc1',
+               'FPS': 29.97,
+               'Duration': '18.49 s',
+               'Frames': 554}
+
+def test_this(canvas, x, y):
+    print ("Starting y size ", y)
+    if (y > pagesizes.A4[0]):
+        canvas.showPage()
+        y = 10 * mm
+    canvas.setTitle("This is a test")
+    canvas.setAuthor("pjain")
+    key_font = 'Helvetica-Bold'
+    value_font = 'Helvetica'
+    title_size = 12
+    size=10
+    canvas.setFont(key_font, title_size)
+    canvas.setFillColor(darkblue)
+    canvas.drawString(x, y, "20220217_DOC_2785.MP4")
+    y = y+6*mm
+    print ("Title y size", y)
+    if (y > pagesizes.A4[0]):
+        canvas.showPage()
+        y = 10*mm
+    for key, value in sample_dict.items():
+        canvas.setFillColor(black)
+        canvas.setFont(value_font, size)
+        canvas.drawString(x+10, y, str(value))
+        canvas.setFillColor(gray)
+        canvas.setFont(key_font, size)
+        canvas.drawRightString(x, y, key + ":")
+        y = y + 4.5*mm
+        if (y > pagesizes.A4[0]):
+            canvas.showPage()
+            y = 10*mm
+    return y
+print (pagesizes.A4)
+x = 25 * mm
+y = 10 * mm
+y = test_this(canvas, x, y)
+y = y + 5*mm
+y = test_this(canvas, x, y)
+y = y + 5*mm
+y = test_this(canvas, x, y)
+y = y + 5*mm
+y = test_this(canvas, x, y)
+y = y + 5*mm
+y = test_this(canvas, x, y)
+y = y + 5*mm
+y = test_this(canvas, x, y)
+
+canvas.save()
