@@ -66,7 +66,7 @@ class VideoFrames(object):
 
         # We will be changing the height to -1 to maintain the aspect ratio
         width, _ = scale.split("x")
-        updt_scale = "{0}x-1".format(width)
+        updt_scale = "{0}:-1".format(width)
 
         # Create the output directory
         output_dir = os.path.join(tempfile.gettempdir(),

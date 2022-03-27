@@ -13,7 +13,7 @@ from reportlab.lib.colors import (darkblue,
                                   lightblue)
 
 # internal imports
-from base import get_config, PdfConstants, USERNAME
+from .base import get_config, PdfConstants, USERNAME
 
 
 
@@ -82,7 +82,7 @@ class PdfCreator(object):
         self.canvas_obj.setTitle(_file_name)
         self.canvas_obj.setAuthor(USERNAME)
 
-    def populate_pdf(self):
+    def _populate_pdf(self):
 
         x_pos, y_pos = self.const.start_x, self.const.start_y
         for video_detail in self.video_details:
@@ -95,10 +95,9 @@ class PdfCreator(object):
             # Set the name
             self.canvas_obj.drawString(x_pos, y_pos, video_detail["name"])
 
-            # We only start when 
-            if y_pos != self.const.start_y:
-                # We have to move the y pos
-                y_pos += self.const.titlefactor_y
+
+            # We have to move the y pos
+            y_pos += self.const.titlefactor_y
 
             # If we have exceed the page height, we will have to create
             # a new page
@@ -114,12 +113,14 @@ class PdfCreator(object):
                 # previous change
                 # We start with Values and then move to Keys
                 self.canvas_obj.setFillColor(self.const.value_color)
-                self.canvas_obj.setFont(self.const.value_font)
+                self.canvas_obj.setFont(self.const.value_font,
+                                        self.const.text_size)
                 self.canvas_obj.drawString(x_pos + self.const.linefactor_x,
                                            y_pos, str(value))
                 # Let's add in the key items
                 self.canvas_obj.setFillColor(self.const.key_color)
-                self.canvas_obj.setFont(self.const.value_font)
+                self.canvas_obj.setFont(self.const.value_font,
+                                        self.const.text_size)
                 self.canvas_obj.drawRightString(x_pos, y_pos,
                                            str(key) + ":")
                 # We have to move the y position now
@@ -132,7 +133,18 @@ class PdfCreator(object):
                     # let's move to the start positions on that page
                     x_pos, y_pos = self.const.start_x, self.const.start_y
 
+            y_pos += self.const.linefactor_y
+            if (y_pos > self.height):
+                    # Move to a new page
+                    self.canvas_obj.showPage()
+                    # let's move to the start positions on that page
+                    x_pos, y_pos = self.const.start_x, self.const.start_y
+
         # Add some custom features
         self._set_custom_canvas_prop()
         # Let's save the canvas object
         self.canvas_obj.save()
+
+    def populate_pdf(self):
+        self._create_canvas()
+        self._populate_pdf()

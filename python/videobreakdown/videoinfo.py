@@ -106,7 +106,7 @@ class VideoInfo(object):
             time_obj = datetime.strptime(time_duration, "%H:%M:%S")
         else:
             time_obj = datetime.strptime(time_duration, "%S.%f s")
-        print (time_obj.microsecond)
+
         total_seconds = (time_obj.hour * 3600) + (time_obj.minute * 60) \
                         + (time_obj.second) + (time_obj.microsecond/1000000)
         total_frames = int(total_seconds * fps)

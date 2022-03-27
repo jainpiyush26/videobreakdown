@@ -49,7 +49,7 @@ class PdfConstants(object):
 
     @property
     def linefactor_y(self):
-        return 4.5 * mm
+        return 5 * mm
 
     @property
     def titlefactor_x(self):
@@ -92,7 +92,7 @@ class PdfConstants(object):
 
     @property
     def title_font(self):
-        return "Courier-Bold"
+        return "Courier-BoldOblique"
 
     @property
     def value_font(self):
