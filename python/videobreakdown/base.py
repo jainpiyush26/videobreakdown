@@ -13,11 +13,11 @@ from reportlab.lib.colors import (darkblue,
 SELF_PATH = os.path.realpath(__file__)
 SELF_DIR_PATH = os.path.dirname(SELF_PATH)
 CONFIG_PATH = os.path.realpath(os.path.join(SELF_DIR_PATH, "../..", "config.yml"))
-GETTAGS_COMMAND = '"{toolpath}" -args -T -{tags} {video} -j > {output}'
+GETTAGS_COMMAND = '"{toolpath}" -args -T -{tags} "{video}" -j > \"{output}\"'
 # Frames export command
-EXPORT_FRAMES = "{ffmpeg_cmd} -i {input} " \
+EXPORT_FRAMES = "{ffmpeg_cmd} -i \"{input}\" " \
                 "-vf scale={scale},select='{frameselect}' " \
-                "-vsync 0 {output} -hide_banner -loglevel error"
+                "-vsync 0 \"{output}\" -hide_banner -loglevel error"
 FRAMES_SEL = "eq(n\,{frame})"
 
 USERNAME = getpass.getuser()
@@ -97,3 +97,7 @@ class PdfConstants(object):
     @property
     def value_font(self):
         return "Helvetica"
+
+    @property
+    def bbox_overflow(self):
+        return 6 * mm

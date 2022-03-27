@@ -85,7 +85,31 @@ class PdfCreator(object):
     def _populate_pdf(self):
 
         x_pos, y_pos = self.const.start_x, self.const.start_y
-        for video_detail in self.video_details:
+        for video_counter, video_detail in enumerate(self.video_details):
+            # We check if we are exceeding the height limits and 
+            # should we change the page
+            expected_end_y_pos = y_pos + self.const.titlefactor_y + \
+                                 len(video_detail["details"])*self.const.linefactor_y + \
+                                 self.const.linefactor_y
+
+            if (expected_end_y_pos > self.height):
+                    # Move to a new page
+                    self.canvas_obj.showPage()
+                    # let's move to the start positions on that page
+                    x_pos, y_pos = self.const.start_x, self.const.start_y
+                    expected_end_y_pos = y_pos + self.const.titlefactor_y + \
+                                 len(video_detail["details"])*self.const.linefactor_y + \
+                                 self.const.linefactor_y
+
+            # For every even entry we want to hightlight with blue 
+            if video_counter % 2 == 1:
+                # Calculating the size (height) of the highlighted section
+                hlght_size = expected_end_y_pos - y_pos
+                # Add in the highlight rectangle
+                self.canvas_obj.setFillColor(self.const.bbox_color)
+                self.canvas_obj.rect(0,y_pos-self.const.bbox_overflow,
+                                     self.width, hlght_size, 0, 1)
+
             # We will start with setting up the name of the video
             # Set the font
             self.canvas_obj.setFont(self.const.title_font,
@@ -95,17 +119,8 @@ class PdfCreator(object):
             # Set the name
             self.canvas_obj.drawString(x_pos, y_pos, video_detail["name"])
 
-
             # We have to move the y pos
             y_pos += self.const.titlefactor_y
-
-            # If we have exceed the page height, we will have to create
-            # a new page
-            if (y_pos > self.height):
-                # Move to a new page
-                self.canvas_obj.showPage()
-                # let's move to the start positions on that page
-                x_pos, y_pos = self.const.start_x, self.const.start_y
 
             # We will start printing the shot's values
             for key, value in video_detail["details"].items():
@@ -125,20 +140,9 @@ class PdfCreator(object):
                                            str(key) + ":")
                 # We have to move the y position now
                 y_pos += self.const.linefactor_y
-                # If we have exceed the page height, we will have to create
-                # a new page
-                if (y_pos > self.height):
-                    # Move to a new page
-                    self.canvas_obj.showPage()
-                    # let's move to the start positions on that page
-                    x_pos, y_pos = self.const.start_x, self.const.start_y
 
+            # Move the position, making it ready for the new entry
             y_pos += self.const.linefactor_y
-            if (y_pos > self.height):
-                    # Move to a new page
-                    self.canvas_obj.showPage()
-                    # let's move to the start positions on that page
-                    x_pos, y_pos = self.const.start_x, self.const.start_y
 
         # Add some custom features
         self._set_custom_canvas_prop()
