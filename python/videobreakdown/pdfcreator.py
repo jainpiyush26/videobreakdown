@@ -120,7 +120,7 @@ class PdfCreator(object):
                 # Let's add in the key items
                 self.canvas_obj.setFillColor(self.const.key_color)
                 self.canvas_obj.setFont(self.const.value_font)
-                self.canvas_obj.drawString(x_pos, y_pos,
+                self.canvas_obj.drawRightString(x_pos, y_pos,
                                            str(key) + ":")
                 # We have to move the y position now
                 y_pos += self.const.linefactor_y
