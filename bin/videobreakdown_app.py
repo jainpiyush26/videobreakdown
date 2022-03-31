@@ -28,7 +28,7 @@ def _parse_arguments():
                       required=True)
     export_pdf_help = "PDF File that the breakdown information should "\
                       "be exported to."
-    args.add_argument("--export-path", "-e", dest="export", required=True, 
+    args.add_argument("--export-path", "-e", dest="export", required=True,
                       help=export_pdf_help)
 
     return args.parse_args()
@@ -70,7 +70,7 @@ def main():
         raise RuntimeError("Path {0} already exists.".format(pdf_path))
 
     if len(errored_paths):
-        raise RuntimeError("Following paths do not exists" 
+        raise RuntimeError("Following paths do not exists"
                            " {0}".format("\n".join(errored_paths)))
 
 
@@ -88,11 +88,12 @@ def main():
         # frames_output = frames_data.export_frames()
         # print ("Frames Exporting Finished")
         # frame_paths = [os.path.join(frames_output, frame)
-        #                 for frame in os.listdir(frames_output)] 
+        #                 for frame in os.listdir(frames_output)]
         frame_paths = []
         frames_info_dict = dict(name=video_name,
                                 details=video_info,
-                                thumbnails=frame_paths)
+                                thumbnails=frame_paths,
+                                scale=frames_data.scale)
 
         pdf_info_list.append(frames_info_dict)
 

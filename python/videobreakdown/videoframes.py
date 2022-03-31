@@ -35,6 +35,8 @@ class VideoFrames(object):
 
         self.config = get_config()
         self.framecount = self.config.get("framecount")
+        self.scale = "x".join([str(int(float(item) * self.config.get("factor")))
+                               for item in self.resolution.split("x")])
 
     def export_frames(self):
         """_summary_
@@ -60,12 +62,8 @@ class VideoFrames(object):
             raise RuntimeError("Invalid path for ffmpeg "
                                "command {0}".format(tool_cmd))
 
-        # Create the scale command
-        scale = "x".join([str(int(float(item) * self.config.get("factor"))) for
-                         item in self.resolution.split("x")])
-
         # We will be changing the height to -1 to maintain the aspect ratio
-        width, _ = scale.split("x")
+        width, _ = self.scale.split("x")
         updt_scale = "{0}:-1".format(width)
 
         # Create the output directory
