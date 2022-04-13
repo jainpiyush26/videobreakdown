@@ -4,11 +4,12 @@ from json import tool
 import os
 import time
 import tempfile
-import platform
 from subprocess import Popen, PIPE
+import numpy as np
+from PIL import Image
 
 # internal
-from .base import get_config, EXPORT_FRAMES, FRAMES_SEL
+from .base import get_config, EXPORT_FRAMES, FRAMES_SEL, OS
 
 
 class VideoFrames(object):
@@ -55,8 +56,7 @@ class VideoFrames(object):
         frames_string = "+".join(frames_list)
 
         # Get the ffmpeg command
-        _os = platform.system()
-        tool_cmd = self.config.get("tools").get("ffmpeg").get(_os)
+        tool_cmd = self.config.get("tools").get("ffmpeg").get(OS)
 
         if not os.path.exists(tool_cmd):
             raise RuntimeError("Invalid path for ffmpeg "
@@ -89,8 +89,33 @@ class VideoFrames(object):
         if not str(std_err, encoding="utf-8") == "":
             raise RuntimeError(std_err)
 
+        # Combination image return
+        output_image_comb = os.path.join(
+            output_dir, "{name}.combine.jpeg".format(name=self.name))
+
+        self._combine_images(output=output_dir,
+                             output_name=output_image_comb)
+
         # return the output directory path
-        return output_dir
+        return output_image_comb
+
+    def _combine_images(self, output, output_name):
+        """_summary_
+
+        Args:
+            output (_type_): _description_
+            output_iamge_comb (_type_): _description_
+        """
+        thumbnail_dirs = os.listdir(output)
+        thumbnail_dirs = [os.path.join(output, thmb) for thmb in thumbnail_dirs]
+        images = [ Image.open(img) for img in thumbnail_dirs ]
+        min_shape = sorted([(np.sum(img.size), img.size) \
+            for img in images])[0][1]
+        _comb_img = list(np.asarray(img.resize(min_shape)) for img in images)
+        images_combination = np.hstack(_comb_img)
+
+        image_combine = Image.fromarray(images_combination)
+        image_combine.save(output_name)
 
     def _get_frames_to_export(self):
         """_summary_

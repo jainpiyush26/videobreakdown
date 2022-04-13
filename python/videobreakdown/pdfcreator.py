@@ -2,6 +2,8 @@
 # std imports
 from fileinput import filename
 import os
+import shutil
+from PIL import Image
 
 # third party imports
 from reportlab.pdfgen import canvas
@@ -16,14 +18,13 @@ from reportlab.lib.colors import (darkblue,
 from .base import get_config, PdfConstants, USERNAME
 
 
-
 class PdfCreator(object):
     """_summary_
 
     :param object: _description_
     :type object: _type_
     """
-    def __init__(self, video_details, export_file_path):
+    def __init__(self, video_details, export_file_path, width):
         """_summary_
 
         :param prop_dict: _description_
@@ -32,9 +33,13 @@ class PdfCreator(object):
         :type thumbnail_path: _type_
         :param export_path: _description
         :type export_path: _type_
+        :param pdf_width: _description
+        :type pdf_width: _type_
         """
         self.video_details = video_details
         self.export_file_path = export_file_path
+        # Convert to mm instead of pixels
+        self.pdf_width = width
         self.config = get_config()
         self.width, self.height = 0, 0
         self.canvas_obj = None
@@ -55,11 +60,11 @@ class PdfCreator(object):
         if isinstance(pdf_size, str):
             _size_tuple = getattr(pagesizes, pdf_size)
             if pdf_orn == "landscape":
-                self.width, self.height = _size_tuple[1], _size_tuple[0]
+                _, self.height = _size_tuple[1], _size_tuple[0]
             else:
-                self.width, self.height = _size_tuple[0], _size_tuple[1]
+                _, self.height = _size_tuple[0], _size_tuple[1]
         elif isinstance(pdf_size, list):
-            self.width, self.height = pdf_size[0], pdf_size[1]
+            _, self.height = pdf_size[0], pdf_size[1]
         else:
             raise RuntimeError("Invalid pdf size format"
                                " {0}".format(pdf_size))
@@ -71,7 +76,7 @@ class PdfCreator(object):
                                " exists!".format(self.export_path))
 
         self.canvas_obj = canvas.Canvas(filename=self.export_file_path,
-                                        pagesize=(self.width, self.height),
+                                        pagesize=(self.pdf_width, self.height),
                                         bottomup=0)
 
 
@@ -82,10 +87,19 @@ class PdfCreator(object):
         self.canvas_obj.setTitle(_file_name)
         self.canvas_obj.setAuthor(USERNAME)
 
-    def _populate_pdf(self):
+    def _cleanup_temp_files(self):
+        """_summary_
+        """
+        for video_detail in self.video_details:
+            thumnail_path = video_detail.get("thumbnail")
+            shutil.rmtree(os.path.dirname(thumnail_path))
 
+    def _populate_pdf(self):
+        """_summary_
+        """
         x_pos, y_pos = self.const.start_x, self.const.start_y
         for video_counter, video_detail in enumerate(self.video_details):
+
             # We check if we are exceeding the height limits and 
             # should we change the page
             expected_end_y_pos = y_pos + self.const.titlefactor_y + \
@@ -122,6 +136,19 @@ class PdfCreator(object):
             # We have to move the y pos
             y_pos += self.const.titlefactor_y
 
+            # We will start adding the images just after the title
+            # so this is the thumbnails y value
+            thumb_y_pos = y_pos
+            thumb_x_pos = self.const.thumbnail_x_pos
+            _thumbnails = video_detail.get("thumbnail")
+            _img = Image.open(_thumbnails)
+            _width = _img.width 
+            _height = _img.height 
+            if _thumbnails:
+                self.canvas_obj.drawImage(_thumbnails, thumb_x_pos,
+                                          thumb_y_pos, width=_width,
+                                          height=_height)
+
             # We will start printing the shot's values
             for key, value in video_detail["details"].items():
                 # We have to reset the font and the color from
@@ -150,5 +177,8 @@ class PdfCreator(object):
         self.canvas_obj.save()
 
     def populate_pdf(self):
+        """_summary_
+        """
         self._create_canvas()
         self._populate_pdf()
+        self._cleanup_temp_files()

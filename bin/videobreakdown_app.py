@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 # std imports
 import os
+import re
 import sys
+import subprocess
 from argparse import ArgumentParser
 
 # Updating system path to get to our files
@@ -13,6 +15,8 @@ sys.path.append(python_pck_path)
 from videobreakdown.videoinfo import VideoInfo
 from videobreakdown.videoframes import VideoFrames
 from videobreakdown.pdfcreator import PdfCreator
+from videobreakdown.base import OS, get_width
+
 
 
 def _parse_arguments():
@@ -35,6 +39,14 @@ def _parse_arguments():
 
 
 def _process_dirs(dir_path):
+    """_summary_
+
+    Args:
+        dir_path (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     final_paths = list()
     for _path in os.listdir(dir_path):
         full_path = os.path.join(dir_path, _path)
@@ -43,6 +55,20 @@ def _process_dirs(dir_path):
         else:
             final_paths.append(full_path)
     return final_paths
+
+def _open_pdf(pdf_path):
+    """_summary_
+
+    Args:
+        pdf_path (_type_): _description_
+    """
+    if OS == "Darwin": # Mac OS
+        subprocess.call(('open', pdf_path))
+    elif OS == "Windows": # Windows
+        os.startfile(pdf_path)
+    else: # Linux
+        subprocess.call(('xdg-open', pdf_path))
+
 
 def main():
     """_summary_
@@ -73,7 +99,8 @@ def main():
         raise RuntimeError("Following paths do not exists"
                            " {0}".format("\n".join(errored_paths)))
 
-
+    # store the framepaths
+    framepaths = []
     for _path in paths_to_proc:
         print ("Processing - {0}".format(_path))
         video_data = VideoInfo(video_path=_path)
@@ -85,25 +112,32 @@ def main():
                                   video_name=video_name,
                                   video_framecount=video_info.get("Frames"),
                                   resolution=video_info.get("Resolution"))
-        # frames_output = frames_data.export_frames()
-        # print ("Frames Exporting Finished")
-        # frame_paths = [os.path.join(frames_output, frame)
-        #                 for frame in os.listdir(frames_output)]
-        frame_paths = []
+        frames_path = frames_data.export_frames()
+        framepaths.append(frames_path)
+        print ("Frames exporting and combining finished")
+
         frames_info_dict = dict(name=video_name,
                                 details=video_info,
-                                thumbnails=frame_paths,
+                                thumbnail=frames_path,
                                 scale=frames_data.scale)
 
         pdf_info_list.append(frames_info_dict)
 
         print ("="*80)
 
+    # Get the resolution required for creating the pdf
+    # image
+    pdf_width = get_width(framepaths)
+
     print ("Exporting final PDF")
     pdf_creator_object = PdfCreator(video_details=pdf_info_list,
-                                    export_file_path=pdf_path)
+                                    export_file_path=pdf_path,
+                                    width=pdf_width)
     pdf_creator_object.populate_pdf()
     print ("PDF Exported to {0}".format(pdf_path))
+
+    print ("Opening the PDF file")
+    _open_pdf(pdf_path=pdf_path)
 
 if __name__ == "__main__":
     main()

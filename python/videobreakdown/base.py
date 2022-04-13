@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 import os
+from numpy import maximum
 import yaml
 import getpass
+import platform
+from PIL import Image
 
 # Third party imports
 from reportlab.lib.units import mm
@@ -16,12 +19,13 @@ CONFIG_PATH = os.path.realpath(os.path.join(SELF_DIR_PATH, "../..", "config.yml"
 GETTAGS_COMMAND = '"{toolpath}" -args -T -{tags} "{video}" -j > \"{output}\"'
 # Frames export command
 EXPORT_FRAMES = "{ffmpeg_cmd} -i \"{input}\" " \
-                "-vf scale={scale},select='{frameselect}' " \
+                "-crf 0 -vf scale={scale},select='{frameselect}' " \
                 "-vsync 0 \"{output}\" -hide_banner -loglevel error"
 FRAMES_SEL = "eq(n\,{frame})"
 
 USERNAME = getpass.getuser()
 
+OS = platform.system()
 
 def get_config():
     """_summary_
@@ -34,7 +38,25 @@ def get_config():
     return config_data
 
 
+def get_width(thumbnails):
+    maximum_size = 0
+    for _thumbnail in thumbnails:
+        _img = Image.open(_thumbnail)
+        _width = _img.width
+        if _width > maximum_size:
+            maximum_size = _width
+    return maximum_size
+
+
 class PdfConstants(object):
+    """_summary_
+
+    Args:
+        object (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     @property
     def start_x(self):
         return 25 * mm
@@ -101,3 +123,8 @@ class PdfConstants(object):
     @property
     def bbox_overflow(self):
         return 6 * mm
+
+    @property
+    def thumbnail_x_pos(self):
+        return 70 * mm
+

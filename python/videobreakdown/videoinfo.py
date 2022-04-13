@@ -2,14 +2,13 @@
 # std imports
 import os
 from subprocess import Popen, PIPE, call
-import platform
 import xxhash
 import tempfile
 import json
 from datetime import datetime
 
 # internal import
-from .base import get_config, GETTAGS_COMMAND
+from .base import get_config, GETTAGS_COMMAND, OS
 
 class VideoInfo(object):
     """_summary_
@@ -129,9 +128,8 @@ class VideoInfo(object):
         # dictionary
         property_data["xxhash-64"] = self.hash
 
-        _os = platform.system()
         tools_config = self.configs.get("tools")
-        tool_path = tools_config.get("exiftool").get(_os)
+        tool_path = tools_config.get("exiftool").get(OS)
         if not tool_path or not os.path.exists(tool_path):
             raise RuntimeError("Invalid EXIFTOOL path {0}".format(tool_path))
 
