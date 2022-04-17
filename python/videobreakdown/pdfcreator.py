@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # std imports
+from distutils.util import change_root
 from fileinput import filename
 import os
 import shutil
@@ -24,7 +25,7 @@ class PdfCreator(object):
     :param object: _description_
     :type object: _type_
     """
-    def __init__(self, video_details, export_file_path, width):
+    def __init__(self, video_details, export_file_path, pdf_dimensions):
         """_summary_
 
         :param prop_dict: _description_
@@ -33,17 +34,20 @@ class PdfCreator(object):
         :type thumbnail_path: _type_
         :param export_path: _description
         :type export_path: _type_
-        :param pdf_width: _description
-        :type pdf_width: _type_
+        :param pdf_dimensions: _description
+        :type pdf_dimensions: _type_
         """
         self.video_details = video_details
         self.export_file_path = export_file_path
+        self.const = PdfConstants()
         # Convert to mm instead of pixels
-        self.pdf_width = width
+        self.pdf_width = 0
+        self.tb_wt = pdf_dimensions[0] 
+        self.tb_ht = pdf_dimensions[1]
         self.config = get_config()
         self.width, self.height = 0, 0
         self.canvas_obj = None
-        self.const = PdfConstants()
+        
 
     def _create_canvas(self):
         """_summary_
@@ -74,6 +78,13 @@ class PdfCreator(object):
         if os.path.exists(self.export_file_path):
             raise RuntimeError("PDF path {0} already"
                                " exists!".format(self.export_path))
+
+        _len_details = len(self.video_details[0].get("details"))
+        _chng_fctr = (_len_details * self.const.linefactor_y)/self.tb_ht
+
+        self.pdf_width = self.tb_wt * _chng_fctr + \
+            self.const.thumbnail_x_pos + self.const.width_buffer
+
 
         self.canvas_obj = canvas.Canvas(filename=self.export_file_path,
                                         pagesize=(self.pdf_width, self.height),
@@ -122,7 +133,7 @@ class PdfCreator(object):
                 # Add in the highlight rectangle
                 self.canvas_obj.setFillColor(self.const.bbox_color)
                 self.canvas_obj.rect(0,y_pos-self.const.bbox_overflow,
-                                     self.width, hlght_size, 0, 1)
+                                     self.pdf_width, hlght_size, 0, 1)
 
             # We will start with setting up the name of the video
             # Set the font
@@ -138,16 +149,20 @@ class PdfCreator(object):
 
             # We will start adding the images just after the title
             # so this is the thumbnails y value
-            thumb_y_pos = y_pos
+            thumb_y_pos = y_pos - self.const.linefactor_y
             thumb_x_pos = self.const.thumbnail_x_pos
             _thumbnails = video_detail.get("thumbnail")
             _img = Image.open(_thumbnails)
-            _width = _img.width 
-            _height = _img.height 
+            _width = _img.width
+            _height = (len(video_detail["details"])*self.const.linefactor_y)
+            
             if _thumbnails:
                 self.canvas_obj.drawImage(_thumbnails, thumb_x_pos,
                                           thumb_y_pos, width=_width,
-                                          height=_height)
+                                          height=_height,
+                                          preserveAspectRatio=True,
+                                          showBoundary=True,
+                                          anchor='sw')
 
             # We will start printing the shot's values
             for key, value in video_detail["details"].items():
@@ -167,7 +182,7 @@ class PdfCreator(object):
                                            str(key) + ":")
                 # We have to move the y position now
                 y_pos += self.const.linefactor_y
-
+            
             # Move the position, making it ready for the new entry
             y_pos += self.const.linefactor_y
 

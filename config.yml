@@ -41,3 +41,9 @@ tags:
   calculated: # We will be multiplying these will be calculated values
               # from the existing inputs
     Frames: [Duration, FPS]
+
+# USE HARDWARE ACCELERATION
+# Use only if you know what you are doing and have understanding
+# of it. If you have an NVIDIA grpahics card you can use "cuda"
+# This will be added as an argument in the data or leave it blank!
+hw_accel: "-hwaccel cuda"

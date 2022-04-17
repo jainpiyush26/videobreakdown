@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # std imports
 import os
+from pkgutil import get_data
 import re
 import sys
 import subprocess
@@ -15,7 +16,7 @@ sys.path.append(python_pck_path)
 from videobreakdown.videoinfo import VideoInfo
 from videobreakdown.videoframes import VideoFrames
 from videobreakdown.pdfcreator import PdfCreator
-from videobreakdown.base import OS, get_width
+from videobreakdown.base import OS, get_dimensions
 
 
 
@@ -92,6 +93,9 @@ def main():
         else:
             paths_to_proc.append(_path)
 
+    if os.path.isdir(pdf_path):
+        raise RuntimeError("Path {0} is not a file path!".format(pdf_path))
+
     if os.path.exists(pdf_path):
         raise RuntimeError("Path {0} already exists.".format(pdf_path))
 
@@ -125,14 +129,10 @@ def main():
 
         print ("="*80)
 
-    # Get the resolution required for creating the pdf
-    # image
-    pdf_width = get_width(framepaths)
-
     print ("Exporting final PDF")
     pdf_creator_object = PdfCreator(video_details=pdf_info_list,
                                     export_file_path=pdf_path,
-                                    width=pdf_width)
+                                    pdf_dimensions=get_dimensions(framepaths))
     pdf_creator_object.populate_pdf()
     print ("PDF Exported to {0}".format(pdf_path))
 

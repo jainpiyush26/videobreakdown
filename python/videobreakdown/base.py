@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from asyncio import constants
 import os
 from numpy import maximum
 import yaml
@@ -18,7 +19,7 @@ SELF_DIR_PATH = os.path.dirname(SELF_PATH)
 CONFIG_PATH = os.path.realpath(os.path.join(SELF_DIR_PATH, "../..", "config.yml"))
 GETTAGS_COMMAND = '"{toolpath}" -args -T -{tags} "{video}" -j > \"{output}\"'
 # Frames export command
-EXPORT_FRAMES = "{ffmpeg_cmd} -i \"{input}\" " \
+EXPORT_FRAMES = "{ffmpeg_cmd} {hw_accel} -i \"{input}\" " \
                 "-crf 0 -vf scale={scale},select='{frameselect}' " \
                 "-vsync 0 \"{output}\" -hide_banner -loglevel error"
 FRAMES_SEL = "eq(n\,{frame})"
@@ -38,14 +39,19 @@ def get_config():
     return config_data
 
 
-def get_width(thumbnails):
-    maximum_size = 0
+def get_dimensions(thumbnails):
+    maximum_width = 0
+    maximum_height = 0
     for _thumbnail in thumbnails:
         _img = Image.open(_thumbnail)
         _width = _img.width
-        if _width > maximum_size:
-            maximum_size = _width
-    return maximum_size
+        _height = _img.height
+        if _width > maximum_width:
+            maximum_width = _width
+        if _height > maximum_height:
+            maximum_height = _height
+
+    return maximum_width , maximum_height
 
 
 class PdfConstants(object):
@@ -128,3 +134,6 @@ class PdfConstants(object):
     def thumbnail_x_pos(self):
         return 70 * mm
 
+    @property
+    def width_buffer(self):
+        return 10*mm

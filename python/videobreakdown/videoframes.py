@@ -6,7 +6,7 @@ import time
 import tempfile
 from subprocess import Popen, PIPE
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageOps
 
 # internal
 from .base import get_config, EXPORT_FRAMES, FRAMES_SEL, OS
@@ -76,11 +76,18 @@ class VideoFrames(object):
         # output frames path
         output_frames = os.path.join(output_dir,
                                      "{name}.%04d.jpeg".format(name=self.name))
+        # Do hardware acceleration
+        _hrdwre_acc = self.config.get("hw_accel", "")
+
+        # Build the export command
         export_cmd = EXPORT_FRAMES.format(ffmpeg_cmd=tool_cmd,
                                           input=self.video_path,
                                           scale=updt_scale,
                                           frameselect=frames_string,
-                                          output=output_frames)
+                                          output=output_frames,
+                                          hw_accel=_hrdwre_acc)
+        print (export_cmd)
+
         # Execute the command
         export_cmd_exec = Popen(export_cmd, stdout=PIPE,
                                 stderr=PIPE, shell=True)
@@ -115,6 +122,7 @@ class VideoFrames(object):
         images_combination = np.hstack(_comb_img)
 
         image_combine = Image.fromarray(images_combination)
+        image_combine = ImageOps.flip(image_combine)
         image_combine.save(output_name)
 
     def _get_frames_to_export(self):
@@ -124,9 +132,12 @@ class VideoFrames(object):
             _type_: _description_
         """
         frames = []
-        frames_interval = self.video_framecount / (self.framecount - 1)
+        if self.video_framecount < self.framecount:
+            return range(0, self.video_framecount+1)
+        frames_interval = int(self.video_framecount / (self.framecount - 1))
         for count in range(0, self.video_framecount+1):
             if int(count % frames_interval) == 0:
                 frames.append(count)
+        # Accounting for the floating point round off
         frames[-1] = frames[-1]-1
         return frames
