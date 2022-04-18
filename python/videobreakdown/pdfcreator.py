@@ -20,40 +20,39 @@ from .base import get_config, PdfConstants, USERNAME
 
 
 class PdfCreator(object):
-    """_summary_
+    """ PDF Creator object
 
     :param object: _description_
     :type object: _type_
     """
     def __init__(self, video_details, export_file_path, pdf_dimensions):
-        """_summary_
+        """ Initialization function for the class
 
-        :param prop_dict: _description_
-        :type prop_dict: _type_
-        :param thumbnail_path: _description_
-        :type thumbnail_path: _type_
-        :param export_path: _description
-        :type export_path: _type_
-        :param pdf_dimensions: _description
-        :type pdf_dimensions: _type_
+        Args:
+            video_details (`dict`): Dictionary with video details including
+                                    framepaths etc
+            export_file_path (`str`): File path to export to
+            pdf_dimensions (`list`): PDF dimensions to create
         """
         self.video_details = video_details
         self.export_file_path = export_file_path
         self.const = PdfConstants()
         # Convert to mm instead of pixels
         self.pdf_width = 0
-        self.tb_wt = pdf_dimensions[0] 
+        self.tb_wt = pdf_dimensions[0]
         self.tb_ht = pdf_dimensions[1]
         self.config = get_config()
         self.width, self.height = 0, 0
         self.canvas_obj = None
-        
+
 
     def _create_canvas(self):
-        """_summary_
+        """ Create the canvas object using the size values
+            from arguments and thumbnails
 
-        :raises RuntimeError: _description_
-        :raises RuntimeError: _description_
+        Raises:
+            RuntimeError: PDF Size format cannot be retrieved
+            RuntimeError: PDF path already exists
         """
         # Logic to get the correct size of the PDF
         # we want to export
@@ -92,26 +91,29 @@ class PdfCreator(object):
 
 
     def _set_custom_canvas_prop(self):
-        """_summary_
+        """ Adding some custom canvas properties
         """
         _file_name = os.path.basename(self.export_file_path)
         self.canvas_obj.setTitle(_file_name)
         self.canvas_obj.setAuthor(USERNAME)
 
     def _cleanup_temp_files(self):
-        """_summary_
+        """ Clean the temporary files that were created in the
+            process (mainly thumbnails and combined thumbnails)
         """
         for video_detail in self.video_details:
             thumnail_path = video_detail.get("thumbnail")
             shutil.rmtree(os.path.dirname(thumnail_path))
 
     def _populate_pdf(self):
-        """_summary_
+        """ Using the canvas object and the video details
+            start filling in the information about the video
+            and add the thumbnails
         """
         x_pos, y_pos = self.const.start_x, self.const.start_y
         for video_counter, video_detail in enumerate(self.video_details):
 
-            # We check if we are exceeding the height limits and 
+            # We check if we are exceeding the height limits and
             # should we change the page
             expected_end_y_pos = y_pos + self.const.titlefactor_y + \
                                  len(video_detail["details"])*self.const.linefactor_y + \
@@ -126,7 +128,7 @@ class PdfCreator(object):
                                  len(video_detail["details"])*self.const.linefactor_y + \
                                  self.const.linefactor_y
 
-            # For every even entry we want to hightlight with blue 
+            # For every even entry we want to hightlight with blue
             if video_counter % 2 == 1:
                 # Calculating the size (height) of the highlighted section
                 hlght_size = expected_end_y_pos - y_pos
@@ -155,7 +157,7 @@ class PdfCreator(object):
             _img = Image.open(_thumbnails)
             _width = _img.width
             _height = (len(video_detail["details"])*self.const.linefactor_y)
-            
+
             if _thumbnails:
                 self.canvas_obj.drawImage(_thumbnails, thumb_x_pos,
                                           thumb_y_pos, width=_width,
@@ -182,7 +184,7 @@ class PdfCreator(object):
                                            str(key) + ":")
                 # We have to move the y position now
                 y_pos += self.const.linefactor_y
-            
+
             # Move the position, making it ready for the new entry
             y_pos += self.const.linefactor_y
 
@@ -192,8 +194,11 @@ class PdfCreator(object):
         self.canvas_obj.save()
 
     def populate_pdf(self):
-        """_summary_
+        """ Populate the PDF values
         """
+        # Create the canvas object
         self._create_canvas()
+        # Populate the pdf file
         self._populate_pdf()
+        # Cleanup the temporary files
         self._cleanup_temp_files()

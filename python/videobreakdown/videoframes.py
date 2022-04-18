@@ -13,21 +13,21 @@ from .base import get_config, EXPORT_FRAMES, FRAMES_SEL, OS
 
 
 class VideoFrames(object):
-    """_summary_
+    """ Video frames class object
 
     Args:
         object (_type_): _description_
     """
     def __init__(self, video_path, video_name, video_framecount,
                  resolution):
-        """_summary_
+        """ Initialization function
 
         Args:
-            video_path (_type_): _description_
-            video_name (_type_): _description_
-            video_framecount (_type_): _description_
-            aspect (_type_): _description_
-            resolution (_type_): _description_
+            video_path (`str`): Path of the video
+            video_name (`str`): Name of the video
+            video_framecount (`int`): How many frames video has
+            aspect (`str`): Aspect ratio of the video
+            resolution (`str`): Resolution value of the video
         """
         self.video_path = video_path
         self.name = video_name
@@ -40,14 +40,15 @@ class VideoFrames(object):
                                for item in self.resolution.split("x")])
 
     def export_frames(self):
-        """_summary_
+        """ Export frames from the video for the given resolution
+            and aspect ratio
 
         Raises:
-            RuntimeError: _description_
-            RuntimeError: _description_
+            RuntimeError: FFMPEG command does not exist
+            RuntimeError: Export command failed
 
         Returns:
-            _type_: _description_
+            `str`: directory path of the thumbnails exported
         """
         _frames = self._get_frames_to_export()
 
@@ -107,11 +108,11 @@ class VideoFrames(object):
         return output_image_comb
 
     def _combine_images(self, output, output_name):
-        """_summary_
+        """ Combine the images into a single thumbnail
 
         Args:
-            output (_type_): _description_
-            output_iamge_comb (_type_): _description_
+            output (`str`): Thumbnail output directory
+            output_name (`str`): Thumbnail output name
         """
         thumbnail_dirs = os.listdir(output)
         thumbnail_dirs = [os.path.join(output, thmb) for thmb in thumbnail_dirs]
@@ -122,14 +123,15 @@ class VideoFrames(object):
         images_combination = np.hstack(_comb_img)
 
         image_combine = Image.fromarray(images_combination)
+        # To manage the PDF oddity we are flipping the exported thumbnail
         image_combine = ImageOps.flip(image_combine)
         image_combine.save(output_name)
 
     def _get_frames_to_export(self):
-        """_summary_
+        """ We will calculate the frames that needs to be exported
 
         Returns:
-            _type_: _description_
+            `list`: Frame list that needs to be exported
         """
         frames = []
         if self.video_framecount < self.framecount:
