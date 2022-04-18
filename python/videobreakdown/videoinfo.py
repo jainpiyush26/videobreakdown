@@ -11,16 +11,16 @@ from datetime import datetime
 from .base import get_config, GETTAGS_COMMAND, OS
 
 class VideoInfo(object):
-    """_summary_
+    """ Video Info class object
 
     Args:
         object (_type_): _description_
     """
     def __init__(self, video_path):
-        """_summary_
+        """ Initialization function for the class
 
         Args:
-            video_path (_type_): _description_
+            video_path (`str`): Video path value
         """
         self.video_path = video_path
         self._hash_block = 65536
@@ -28,39 +28,39 @@ class VideoInfo(object):
 
     @property
     def hash(self):
-        """_summary_
+        """ Hash value of the video
 
         Returns:
-            _type_: _description_
+            `str`: Hash value of the file
         """
         hex_hash_digest = self._gen_hash()
         return hex_hash_digest
 
     @property
     def exists(self):
-        """_summary_
+        """ Does the video path exists
 
         Returns:
-            _type_: _description_
+            `bool`: Does the video path exists or not
         """
         return os.path.exists(self.video_path)
 
     @property
     def fileext(self):
-        """_summary_
+        """ File extension of the video path
 
         Returns:
-            _type_: _description_
+            `str`: File extension of the video
         """
         extension = os.path.splitext(self.video_path)[-1]
         return extension
 
     @property
     def valid(self):
-        """_summary_
+        """ Is the video of valif format or not
 
         Returns:
-            _type_: _description_
+            `bool`: True or False
         """
         config_data = get_config()
         extension = self.fileext
@@ -71,33 +71,36 @@ class VideoInfo(object):
 
     @property
     def videoprops(self):
-        """_summary_
+        """ Return the video properties, which includes getting
+            a bunch of metadata from the video file
 
         Returns:
-            _type_: _description_
+            `dict`: Property dict values
         """
         return self._process_video_props()
 
     @property
     def name(self):
-        """_summary_
+        """ Name of the video file
 
         Returns:
-            _type_: _description_
+            `str`: Video name without the extension
         """
         base_name = os.path.basename(self.video_path)
         _name = os.path.splitext(base_name)[0]
         return _name
 
     def _get_frames(self, time_duration, fps):
-        """_summary_
+        """ This returns the total number of frames by
+            calculating time_duration multiplied by fps
 
-        :param time_duration: _description_
-        :type time_duration: _type_
-        :param fps: _description_
-        :type fps: _type_
-        :return: _description_
-        :rtype: _type_
+
+        Args:
+            time_duration (`str`): String representation of string
+            fps (`int`): fps value of the video
+
+        Returns:
+            `int`: Total frames in the video
         """
         # We need to create a time object to calculate the frames
         time_obj = None
@@ -113,14 +116,14 @@ class VideoInfo(object):
         return total_frames
 
     def _process_video_props(self):
-        """_summary_
+        """ Process video properties
 
         Raises:
             RuntimeError: _description_
             RuntimeError: _description_
 
         Returns:
-            _type_: _description_
+            `dict`: Dictionary values including the properties of the video
         """
         property_data = dict()
 
@@ -183,10 +186,10 @@ class VideoInfo(object):
         return property_data
 
     def _gen_hash(self):
-        """_summary_
+        """ Get the hash value of the vidoe
 
         Returns:
-            _type_: _description_
+            `str`: Generate the has of the video
         """
         hasher = xxhash.xxh64()
         with open(self.video_path, "rb") as file_open:
