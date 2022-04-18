@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>videobreakdown.videoinfo API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>videobreakdown.videoinfo</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">#!/usr/bin/env python
+# std imports
+import os
+from subprocess import Popen, PIPE, call
+import xxhash
+import tempfile
+import json
+from datetime import datetime
+
+# internal import
+from .base import get_config, GETTAGS_COMMAND, OS
+
+class VideoInfo(object):
+    &#34;&#34;&#34; Video Info class object
+
+    Args:
+        object (_type_): _description_
+    &#34;&#34;&#34;
+    def __init__(self, video_path):
+        &#34;&#34;&#34; Initialization function for the class
+
+        Args:
+            video_path (`str`): Video path value
+        &#34;&#34;&#34;
+        self.video_path = video_path
+        self._hash_block = 65536
+        self.configs = get_config()
+
+    @property
+    def hash(self):
+        &#34;&#34;&#34; Hash value of the video
+
+        Returns:
+            `str`: Hash value of the file
+        &#34;&#34;&#34;
+        hex_hash_digest = self._gen_hash()
+        return hex_hash_digest
+
+    @property
+    def exists(self):
+        &#34;&#34;&#34; Does the video path exists
+
+        Returns:
+            `bool`: Does the video path exists or not
+        &#34;&#34;&#34;
+        return os.path.exists(self.video_path)
+
+    @property
+    def fileext(self):
+        &#34;&#34;&#34; File extension of the video path
+
+        Returns:
+            `str`: File extension of the video
+        &#34;&#34;&#34;
+        extension = os.path.splitext(self.video_path)[-1]
+        return extension
+
+    @property
+    def valid(self):
+        &#34;&#34;&#34; Is the video of valif format or not
+
+        Returns:
+            `bool`: True or False
+        &#34;&#34;&#34;
+        config_data = get_config()
+        extension = self.fileext
+        # We need this to be lower case (windows oh windows!)
+        if extension.lower() in config_data.get(&#34;formats&#34;):
+            return True
+        return False
+
+    @property
+    def videoprops(self):
+        &#34;&#34;&#34; Return the video properties, which includes getting
+            a bunch of metadata from the video file
+
+        Returns:
+            `dict`: Property dict values
+        &#34;&#34;&#34;
+        return self._process_video_props()
+
+    @property
+    def name(self):
+        &#34;&#34;&#34; Name of the video file
+
+        Returns:
+            `str`: Video name without the extension
+        &#34;&#34;&#34;
+        base_name = os.path.basename(self.video_path)
+        _name = os.path.splitext(base_name)[0]
+        return _name
+
+    def _get_frames(self, time_duration, fps):
+        &#34;&#34;&#34; This returns the total number of frames by
+            calculating time_duration multiplied by fps
+
+
+        Args:
+            time_duration (`str`): String representation of string
+            fps (`int`): fps value of the video
+
+        Returns:
+            `int`: Total frames in the video
+        &#34;&#34;&#34;
+        # We need to create a time object to calculate the frames
+        time_obj = None
+        if &#34;:&#34; in time_duration:
+            time_obj = datetime.strptime(time_duration, &#34;%H:%M:%S&#34;)
+        else:
+            time_obj = datetime.strptime(time_duration, &#34;%S.%f s&#34;)
+
+        total_seconds = (time_obj.hour * 3600) + (time_obj.minute * 60) \
+                        + (time_obj.second) + (time_obj.microsecond/1000000)
+        total_frames = int(total_seconds * fps)
+
+        return total_frames
+
+    def _process_video_props(self):
+        &#34;&#34;&#34; Process video properties
+
+        Raises:
+            RuntimeError: _description_
+            RuntimeError: _description_
+
+        Returns:
+            `dict`: Dictionary values including the properties of the video
+        &#34;&#34;&#34;
+        property_data = dict()
+
+        # We would also like to add xxhash-64 as one of the items in the
+        # dictionary
+        property_data[&#34;xxhash-64&#34;] = self.hash
+
+        tools_config = self.configs.get(&#34;tools&#34;)
+        tool_path = tools_config.get(&#34;exiftool&#34;).get(OS)
+        if not tool_path or not os.path.exists(tool_path):
+            raise RuntimeError(&#34;Invalid EXIFTOOL path {0}&#34;.format(tool_path))
+
+        full_tags_dict = self.configs.get(&#34;tags&#34;)
+        tags_dict = full_tags_dict.get(&#34;default&#34;)
+        calculated_dict = full_tags_dict.get(&#34;calculated&#34;)
+
+        _ext = self.fileext
+        # Let&#39;s add any specific tags as per the formats
+        if _ext.lower() in full_tags_dict.keys():
+            tags_dict.update(full_tags_dict.get(_ext.lower()))
+
+        tags_string = &#34; -&#34;.join(tags_dict.keys())
+        output_file = tempfile.NamedTemporaryFile(delete=False)
+        output_file.close()
+        command = GETTAGS_COMMAND.format(toolpath=tool_path,
+                                         tags=tags_string,
+                                         video=self.video_path,
+                                         output=output_file.name)
+
+        command_exec = Popen(command, shell=True, stderr=PIPE, stdout=PIPE)
+        _, std_err = command_exec.communicate()
+        if command_exec.returncode != 0:
+            raise RuntimeError(std_err)
+
+        with open(output_file.name, &#39;rb&#39;) as file_open:
+            temp_property_data = json.load(file_open)
+
+        # We have to remove the created temp file once we have read
+        # it and created the json dict
+        os.remove(output_file.name)
+
+        # We are passing only one path per class object so yeah we don&#39;t
+        # have to check for any other indexes
+        for _key, _value in temp_property_data[0].items():
+            # We use the more readable keys and ignore not required
+            # values (like sourcename)
+            if _key not in tags_dict.keys():
+                continue
+            keyvalue = _value.get(&#39;val&#39;)
+
+            property_data[tags_dict.get(_key)] = keyvalue
+
+        # We need to get the calculated values
+        for key, values in calculated_dict.items():
+            # NOTE: This will have to be updated to get the correct
+            # logic for any new calculated value!
+            if key == &#34;Frames&#34;:
+                property_data[key] = self._get_frames(
+                    *[property_data.get(_val) for _val in values])
+        return property_data
+
+    def _gen_hash(self):
+        &#34;&#34;&#34; Get the hash value of the vidoe
+
+        Returns:
+            `str`: Generate the has of the video
+        &#34;&#34;&#34;
+        hasher = xxhash.xxh64()
+        with open(self.video_path, &#34;rb&#34;) as file_open:
+            buffer = file_open.read(self._hash_block)
+            while len(buffer) &gt; 0:
+                hasher.update(buffer)
+                buffer = file_open.read(self._hash_block)
+        return hasher.hexdigest()</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="videobreakdown.videoinfo.VideoInfo"><code class="flex name class">
+<span>class <span class="ident">VideoInfo</span></span>
+<span>(</span><span>video_path)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Video Info class object</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>object</code></strong> :&ensp;<code>_type_</code></dt>
+<dd><em>description</em></dd>
+</dl>
+<p>Initialization function for the class</p>
+<h2 id="args_1">Args</h2>
+<p>video_path (<code>str</code>): Video path value</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class VideoInfo(object):
+    &#34;&#34;&#34; Video Info class object
+
+    Args:
+        object (_type_): _description_
+    &#34;&#34;&#34;
+    def __init__(self, video_path):
+        &#34;&#34;&#34; Initialization function for the class
+
+        Args:
+            video_path (`str`): Video path value
+        &#34;&#34;&#34;
+        self.video_path = video_path
+        self._hash_block = 65536
+        self.configs = get_config()
+
+    @property
+    def hash(self):
+        &#34;&#34;&#34; Hash value of the video
+
+        Returns:
+            `str`: Hash value of the file
+        &#34;&#34;&#34;
+        hex_hash_digest = self._gen_hash()
+        return hex_hash_digest
+
+    @property
+    def exists(self):
+        &#34;&#34;&#34; Does the video path exists
+
+        Returns:
+            `bool`: Does the video path exists or not
+        &#34;&#34;&#34;
+        return os.path.exists(self.video_path)
+
+    @property
+    def fileext(self):
+        &#34;&#34;&#34; File extension of the video path
+
+        Returns:
+            `str`: File extension of the video
+        &#34;&#34;&#34;
+        extension = os.path.splitext(self.video_path)[-1]
+        return extension
+
+    @property
+    def valid(self):
+        &#34;&#34;&#34; Is the video of valif format or not
+
+        Returns:
+            `bool`: True or False
+        &#34;&#34;&#34;
+        config_data = get_config()
+        extension = self.fileext
+        # We need this to be lower case (windows oh windows!)
+        if extension.lower() in config_data.get(&#34;formats&#34;):
+            return True
+        return False
+
+    @property
+    def videoprops(self):
+        &#34;&#34;&#34; Return the video properties, which includes getting
+            a bunch of metadata from the video file
+
+        Returns:
+            `dict`: Property dict values
+        &#34;&#34;&#34;
+        return self._process_video_props()
+
+    @property
+    def name(self):
+        &#34;&#34;&#34; Name of the video file
+
+        Returns:
+            `str`: Video name without the extension
+        &#34;&#34;&#34;
+        base_name = os.path.basename(self.video_path)
+        _name = os.path.splitext(base_name)[0]
+        return _name
+
+    def _get_frames(self, time_duration, fps):
+        &#34;&#34;&#34; This returns the total number of frames by
+            calculating time_duration multiplied by fps
+
+
+        Args:
+            time_duration (`str`): String representation of string
+            fps (`int`): fps value of the video
+
+        Returns:
+            `int`: Total frames in the video
+        &#34;&#34;&#34;
+        # We need to create a time object to calculate the frames
+        time_obj = None
+        if &#34;:&#34; in time_duration:
+            time_obj = datetime.strptime(time_duration, &#34;%H:%M:%S&#34;)
+        else:
+            time_obj = datetime.strptime(time_duration, &#34;%S.%f s&#34;)
+
+        total_seconds = (time_obj.hour * 3600) + (time_obj.minute * 60) \
+                        + (time_obj.second) + (time_obj.microsecond/1000000)
+        total_frames = int(total_seconds * fps)
+
+        return total_frames
+
+    def _process_video_props(self):
+        &#34;&#34;&#34; Process video properties
+
+        Raises:
+            RuntimeError: _description_
+            RuntimeError: _description_
+
+        Returns:
+            `dict`: Dictionary values including the properties of the video
+        &#34;&#34;&#34;
+        property_data = dict()
+
+        # We would also like to add xxhash-64 as one of the items in the
+        # dictionary
+        property_data[&#34;xxhash-64&#34;] = self.hash
+
+        tools_config = self.configs.get(&#34;tools&#34;)
+        tool_path = tools_config.get(&#34;exiftool&#34;).get(OS)
+        if not tool_path or not os.path.exists(tool_path):
+            raise RuntimeError(&#34;Invalid EXIFTOOL path {0}&#34;.format(tool_path))
+
+        full_tags_dict = self.configs.get(&#34;tags&#34;)
+        tags_dict = full_tags_dict.get(&#34;default&#34;)
+        calculated_dict = full_tags_dict.get(&#34;calculated&#34;)
+
+        _ext = self.fileext
+        # Let&#39;s add any specific tags as per the formats
+        if _ext.lower() in full_tags_dict.keys():
+            tags_dict.update(full_tags_dict.get(_ext.lower()))
+
+        tags_string = &#34; -&#34;.join(tags_dict.keys())
+        output_file = tempfile.NamedTemporaryFile(delete=False)
+        output_file.close()
+        command = GETTAGS_COMMAND.format(toolpath=tool_path,
+                                         tags=tags_string,
+                                         video=self.video_path,
+                                         output=output_file.name)
+
+        command_exec = Popen(command, shell=True, stderr=PIPE, stdout=PIPE)
+        _, std_err = command_exec.communicate()
+        if command_exec.returncode != 0:
+            raise RuntimeError(std_err)
+
+        with open(output_file.name, &#39;rb&#39;) as file_open:
+            temp_property_data = json.load(file_open)
+
+        # We have to remove the created temp file once we have read
+        # it and created the json dict
+        os.remove(output_file.name)
+
+        # We are passing only one path per class object so yeah we don&#39;t
+        # have to check for any other indexes
+        for _key, _value in temp_property_data[0].items():
+            # We use the more readable keys and ignore not required
+            # values (like sourcename)
+            if _key not in tags_dict.keys():
+                continue
+            keyvalue = _value.get(&#39;val&#39;)
+
+            property_data[tags_dict.get(_key)] = keyvalue
+
+        # We need to get the calculated values
+        for key, values in calculated_dict.items():
+            # NOTE: This will have to be updated to get the correct
+            # logic for any new calculated value!
+            if key == &#34;Frames&#34;:
+                property_data[key] = self._get_frames(
+                    *[property_data.get(_val) for _val in values])
+        return property_data
+
+    def _gen_hash(self):
+        &#34;&#34;&#34; Get the hash value of the vidoe
+
+        Returns:
+            `str`: Generate the has of the video
+        &#34;&#34;&#34;
+        hasher = xxhash.xxh64()
+        with open(self.video_path, &#34;rb&#34;) as file_open:
+            buffer = file_open.read(self._hash_block)
+            while len(buffer) &gt; 0:
+                hasher.update(buffer)
+                buffer = file_open.read(self._hash_block)
+        return hasher.hexdigest()</code></pre>
+</details>
+<h3>Instance variables</h3>
+<dl>
+<dt id="videobreakdown.videoinfo.VideoInfo.exists"><code class="name">var <span class="ident">exists</span></code></dt>
+<dd>
+<div class="desc"><p>Does the video path exists</p>
+<h2 id="returns">Returns</h2>
+<p><code>bool</code>: Does the video path exists or not</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def exists(self):
+    &#34;&#34;&#34; Does the video path exists
+
+    Returns:
+        `bool`: Does the video path exists or not
+    &#34;&#34;&#34;
+    return os.path.exists(self.video_path)</code></pre>
+</details>
+</dd>
+<dt id="videobreakdown.videoinfo.VideoInfo.fileext"><code class="name">var <span class="ident">fileext</span></code></dt>
+<dd>
+<div class="desc"><p>File extension of the video path</p>
+<h2 id="returns">Returns</h2>
+<p><code>str</code>: File extension of the video</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def fileext(self):
+    &#34;&#34;&#34; File extension of the video path
+
+    Returns:
+        `str`: File extension of the video
+    &#34;&#34;&#34;
+    extension = os.path.splitext(self.video_path)[-1]
+    return extension</code></pre>
+</details>
+</dd>
+<dt id="videobreakdown.videoinfo.VideoInfo.hash"><code class="name">var <span class="ident">hash</span></code></dt>
+<dd>
+<div class="desc"><p>Hash value of the video</p>
+<h2 id="returns">Returns</h2>
+<p><code>str</code>: Hash value of the file</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def hash(self):
+    &#34;&#34;&#34; Hash value of the video
+
+    Returns:
+        `str`: Hash value of the file
+    &#34;&#34;&#34;
+    hex_hash_digest = self._gen_hash()
+    return hex_hash_digest</code></pre>
+</details>
+</dd>
+<dt id="videobreakdown.videoinfo.VideoInfo.name"><code class="name">var <span class="ident">name</span></code></dt>
+<dd>
+<div class="desc"><p>Name of the video file</p>
+<h2 id="returns">Returns</h2>
+<p><code>str</code>: Video name without the extension</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def name(self):
+    &#34;&#34;&#34; Name of the video file
+
+    Returns:
+        `str`: Video name without the extension
+    &#34;&#34;&#34;
+    base_name = os.path.basename(self.video_path)
+    _name = os.path.splitext(base_name)[0]
+    return _name</code></pre>
+</details>
+</dd>
+<dt id="videobreakdown.videoinfo.VideoInfo.valid"><code class="name">var <span class="ident">valid</span></code></dt>
+<dd>
+<div class="desc"><p>Is the video of valif format or not</p>
+<h2 id="returns">Returns</h2>
+<p><code>bool</code>: True or False</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def valid(self):
+    &#34;&#34;&#34; Is the video of valif format or not
+
+    Returns:
+        `bool`: True or False
+    &#34;&#34;&#34;
+    config_data = get_config()
+    extension = self.fileext
+    # We need this to be lower case (windows oh windows!)
+    if extension.lower() in config_data.get(&#34;formats&#34;):
+        return True
+    return False</code></pre>
+</details>
+</dd>
+<dt id="videobreakdown.videoinfo.VideoInfo.videoprops"><code class="name">var <span class="ident">videoprops</span></code></dt>
+<dd>
+<div class="desc"><p>Return the video properties, which includes getting
+a bunch of metadata from the video file</p>
+<h2 id="returns">Returns</h2>
+<p><code>dict</code>: Property dict values</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def videoprops(self):
+    &#34;&#34;&#34; Return the video properties, which includes getting
+        a bunch of metadata from the video file
+
+    Returns:
+        `dict`: Property dict values
+    &#34;&#34;&#34;
+    return self._process_video_props()</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="videobreakdown" href="index.html">videobreakdown</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="videobreakdown.videoinfo.VideoInfo" href="#videobreakdown.videoinfo.VideoInfo">VideoInfo</a></code></h4>
+<ul class="two-column">
+<li><code><a title="videobreakdown.videoinfo.VideoInfo.exists" href="#videobreakdown.videoinfo.VideoInfo.exists">exists</a></code></li>
+<li><code><a title="videobreakdown.videoinfo.VideoInfo.fileext" href="#videobreakdown.videoinfo.VideoInfo.fileext">fileext</a></code></li>
+<li><code><a title="videobreakdown.videoinfo.VideoInfo.hash" href="#videobreakdown.videoinfo.VideoInfo.hash">hash</a></code></li>
+<li><code><a title="videobreakdown.videoinfo.VideoInfo.name" href="#videobreakdown.videoinfo.VideoInfo.name">name</a></code></li>
+<li><code><a title="videobreakdown.videoinfo.VideoInfo.valid" href="#videobreakdown.videoinfo.VideoInfo.valid">valid</a></code></li>
+<li><code><a title="videobreakdown.videoinfo.VideoInfo.videoprops" href="#videobreakdown.videoinfo.VideoInfo.videoprops">videoprops</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>
