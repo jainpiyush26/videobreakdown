@@ -21,10 +21,10 @@ from videobreakdown.base import OS, get_dimensions
 
 
 def _parse_arguments():
-    """_summary_
+    """Argument parser function
 
     Returns:
-        _type_: _description_
+        `Namespace` : Argument parser object
     """
     help_str = "Video Breakdown Code"
     args = ArgumentParser(help_str)
@@ -43,10 +43,11 @@ def _process_dirs(dir_path):
     """_summary_
 
     Args:
-        dir_path (_type_): _description_
+        dir_path (`str`): directory path to search the video files from
 
     Returns:
-        _type_: _description_
+        `list`: List of file paths for the videos after recursive search
+                of the directory entered
     """
     final_paths = list()
     for _path in os.listdir(dir_path):
@@ -58,10 +59,11 @@ def _process_dirs(dir_path):
     return final_paths
 
 def _open_pdf(pdf_path):
-    """_summary_
+    """ Open the genereated PDF depending on the which OS
+    we are on.
 
     Args:
-        pdf_path (_type_): _description_
+        pdf_path (`str`): _description_
     """
     if OS == "Darwin": # Mac OS
         subprocess.call(('open', pdf_path))
@@ -72,7 +74,13 @@ def _open_pdf(pdf_path):
 
 
 def main():
-    """_summary_
+    """ Main function that will run the video info, breakdown
+        and pdf creation
+
+    Raises:
+        RuntimeError: _description_
+        RuntimeError: _description_
+        RuntimeError: _description_
     """
     arg = _parse_arguments()
     path = arg.path
@@ -93,12 +101,15 @@ def main():
         else:
             paths_to_proc.append(_path)
 
+    # Lets check if the path provided is directory or not
     if os.path.isdir(pdf_path):
         raise RuntimeError("Path {0} is not a file path!".format(pdf_path))
 
+    # Let's check if the path already exists or not
     if os.path.exists(pdf_path):
         raise RuntimeError("Path {0} already exists.".format(pdf_path))
 
+    # If path does not exists, then let's report that
     if len(errored_paths):
         raise RuntimeError("Following paths do not exists"
                            " {0}".format("\n".join(errored_paths)))
@@ -107,11 +118,13 @@ def main():
     framepaths = []
     for _path in paths_to_proc:
         print ("Processing - {0}".format(_path))
+        # Video Info object will be created for the video path
         video_data = VideoInfo(video_path=_path)
         video_info = video_data.videoprops
         video_name = video_data.name
         print ("Information gathered for {0}".format(video_name))
         print ("Exporting frames...")
+        # Let's export the frames
         frames_data = VideoFrames(video_path=_path,
                                   video_name=video_name,
                                   video_framecount=video_info.get("Frames"),
@@ -119,16 +132,17 @@ def main():
         frames_path = frames_data.export_frames()
         framepaths.append(frames_path)
         print ("Frames exporting and combining finished")
-
+        # Store all this in the information
         frames_info_dict = dict(name=video_name,
                                 details=video_info,
                                 thumbnail=frames_path,
                                 scale=frames_data.scale)
-
+        # Insert into the pdf info list
         pdf_info_list.append(frames_info_dict)
 
         print ("="*80)
 
+    # Let's start creating the PDF creator object
     print ("Exporting final PDF")
     pdf_creator_object = PdfCreator(video_details=pdf_info_list,
                                     export_file_path=pdf_path,
