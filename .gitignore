@@ -139,3 +139,6 @@ dmypy.json
 
 # Extras folder
 extras/
+
+# Ignore the config YAML
+appconfig.yml
