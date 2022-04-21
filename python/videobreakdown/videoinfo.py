@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # std imports
 import os
+import re
 from subprocess import Popen, PIPE, call
 import xxhash
 import tempfile
@@ -137,12 +138,24 @@ class VideoInfo(object):
         tags_dict = full_tags_dict.get("default")
         calculated_dict = full_tags_dict.get("calculated")
 
+        # Get the camera type
+        camera_list = full_tags_dict.get("camera_model")
+
+        # color tags values
+        color_tags_dict = full_tags_dict.get("camera_specific")
+        color_tags = []
+        for _key, _value in color_tags_dict.items():
+            color_tags.append(_value)
+
         _ext = self.fileext
         # Let's add any specific tags as per the formats
         if _ext.lower() in full_tags_dict.keys():
             tags_dict.update(full_tags_dict.get(_ext.lower()))
 
         tags_string = " -".join(tags_dict.keys())
+        tags_string = tags_string + " -" + " -".join(camera_list)
+        tags_string = tags_string + " -" + " -".join(color_tags)
+
         output_file = tempfile.NamedTemporaryFile(delete=False)
         output_file.close()
         command = GETTAGS_COMMAND.format(toolpath=tool_path,
@@ -151,7 +164,9 @@ class VideoInfo(object):
                                          output=output_file.name)
 
         command_exec = Popen(command, shell=True, stderr=PIPE, stdout=PIPE)
+
         _, std_err = command_exec.communicate()
+
         if command_exec.returncode != 0:
             raise RuntimeError(std_err)
 
@@ -161,6 +176,22 @@ class VideoInfo(object):
         # We have to remove the created temp file once we have read
         # it and created the json dict
         os.remove(output_file.name)
+
+        # We look at the ways we can get the camera model makes from
+        # the metadata tags for MAKE or MAJOR MANIFACTURER
+        camera_type = None
+        camera_model_values = []
+        for _tag in camera_list:
+            tag_value = temp_property_data[0].get(_tag)
+            if tag_value.get('val') != "-":
+                camera_model_values.append(tag_value.get('val'))
+
+        # Get the metadata tags for getting the color values 
+        for _camera_name in color_tags_dict.keys():
+            for _model in camera_model_values:
+                if re.match(_camera_name, _model, re.I):
+                    camera_type = _camera_name
+                    break
 
         # We are passing only one path per class object so yeah we don't
         # have to check for any other indexes
@@ -180,6 +211,13 @@ class VideoInfo(object):
             if key == "Frames":
                 property_data[key] = self._get_frames(
                     *[property_data.get(_val) for _val in values])
+
+        colorspace_tag = color_tags_dict.get(camera_type)
+        colorspace_val = temp_property_data[0].get(colorspace_tag, " - ")
+        if colorspace_val != " - ":
+            colorspace_val = colorspace_val.get('val')
+        property_data["Colorspace"] = colorspace_val
+
         return property_data
 
     def _gen_hash(self):

@@ -86,7 +86,6 @@ class VideoFrames(object):
                                           frameselect=frames_string,
                                           output=output_frames,
                                           hw_accel=_hrdwre_acc)
-        print (export_cmd)
 
         # Execute the command
         export_cmd_exec = Popen(export_cmd, stdout=PIPE,

@@ -41,6 +41,10 @@ tags:
   calculated: # We will be multiplying these will be calculated values
               # from the existing inputs
     Frames: [Duration, FPS]
+  camera_model: [DeviceManufacturer, Make, MajorBrand]
+  camera_specific:
+    sony: AcquisitionRecordGroupItemValue
+    canon: ColorSpace2
 
 # USE HARDWARE ACCELERATION
 # Use only if you know what you are doing and have understanding
