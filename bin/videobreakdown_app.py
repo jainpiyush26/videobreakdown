@@ -7,11 +7,6 @@ import sys
 import subprocess
 from argparse import ArgumentParser
 
-# Updating system path to get to our files
-_python_pck_path = os.path.join(os.path.dirname(__file__), "../", "python")
-python_pck_path = os.path.realpath(_python_pck_path)
-sys.path.append(python_pck_path)
-
 # internal
 from videobreakdown.videoinfo import VideoInfo
 from videobreakdown.videoframes import VideoFrames
