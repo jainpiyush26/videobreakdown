@@ -104,5 +104,5 @@ We have a few options that we can change in the config file
 ## Regeneration Help Files
 To regenerate the documentations you can run the following from your **<GIT_LOCATION>**
 ```
-pydoc videobreakdown
+pdoc3 --html videobreakdown
 ```
