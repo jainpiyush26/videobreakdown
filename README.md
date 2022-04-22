@@ -73,10 +73,36 @@ tools:
 This will setup the code to run with your machine specific settings
 
 ### Updating environment variables
+
 For your OS (windows, mac or linux) you will have to update the following environment variables. If the environment variable does not exists then you can create one.
  - PATH = <GIT_LOCATION>/bin
  - PYTHONPATH = <GIT_LOCATION>/python
 
 ## Running the application
-### Arguments for the main application
+Here are the options that are available for the applications 
+```
+usage: Video Breakdown Code [-h] --path [PATH ...] --export-path EXPORT
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --path [PATH ...], -p [PATH ...]
+                        File(s) or Folder path that contains video files
+  --export-path EXPORT, -e EXPORT
+                        PDF File that the breakdown information should be exported to.
+```
+### There are two arguments and they are honestly pretty straight forward
+ - Path: This can be either a folder or a single path or multiple paths video paths
+ - Export Path: PDF file that you want the PDF export to, it won't overwrite and will throw a runtime error if it already exists
+
+### Modifying the configs
+We have a few options that we can change in the config file
+- formats : If you want to use this on more video file formats
+- framecount : The amount of thumbnails 
+- factor : If the exported thumbnails scale needs to be changed
+- ***hw_accel : If you do not have a graphics card on your machine, this needs to be commented out***
+
 ## Regeneration Help Files
+To regenerate the documentations you can run the following from your **<GIT_LOCATION>**
+```
+pydoc videobreakdown
+```
