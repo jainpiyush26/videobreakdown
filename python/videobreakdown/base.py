@@ -20,9 +20,9 @@ SELF_DIR_PATH = os.path.dirname(SELF_PATH)
 # Config path to be used in the applications
 CONFIG_PATH = os.path.realpath(os.path.join(SELF_DIR_PATH, "../..", "appconfig.yml"))
 # What tags are to be used
-GETTAGS_COMMAND = '"{toolpath}" -args -T -{tags} "{video}" -j > \"{output}\"'
+GETTAGS_COMMAND = '"{toolpath}" -api largefilesupport=1 -args -T -{tags} "{video}" -j > \"{output}\"'
 # Frames export command
-EXPORT_FRAMES = "{ffmpeg_cmd} {hw_accel} -i \"{input}\" " \
+EXPORT_FRAMES = "\"{ffmpeg_cmd}\" {hw_accel} -i \"{input}\" " \
                 "-crf 0 -vf scale={scale},select='{frameselect}' " \
                 "-vsync 0 \"{output}\" -hide_banner -loglevel error"
 # Frames selection argument
