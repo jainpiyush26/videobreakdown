@@ -2,8 +2,7 @@
 # std imports
 import os
 from pkgutil import get_data
-import re
-import sys
+import time
 import subprocess
 from argparse import ArgumentParser
 
@@ -27,12 +26,12 @@ def _parse_arguments():
     args.add_argument("--path", "-p", nargs="*", help=path_help,
                       required=True)
     export_pdf_help = "PDF File that the breakdown information should "\
-                      "be exported to."
-    args.add_argument("--export-path", "-e", dest="export", required=True,
+                      "be exported to. If left empty, the folder path "\
+                      "will be used. Name will be current time stamp."
+    args.add_argument("--export-path", "-e", dest="export", 
                       help=export_pdf_help)
 
     return args.parse_args()
-
 
 def _process_dirs(dir_path):
     """_summary_
@@ -96,13 +95,26 @@ def main():
         else:
             paths_to_proc.append(_path)
 
-    # Lets check if the path provided is directory or not
-    if os.path.isdir(pdf_path):
-        raise RuntimeError("Path {0} is not a file path!".format(pdf_path))
+    # If we have the PDF path value
+    if pdf_path:
+        # Lets check if the path provided is directory or not
+        if os.path.isdir(pdf_path):
+            raise RuntimeError("Path {0} is not a" \
+                               " file path!".format(pdf_path))
 
-    # Let's check if the path already exists or not
-    if os.path.exists(pdf_path):
-        raise RuntimeError("Path {0} already exists.".format(pdf_path))
+        # Let's check if the path already exists or not
+        if os.path.exists(pdf_path):
+            raise RuntimeError("Path {0} already exists.".format(pdf_path))
+
+    else:
+        # If the pdf path argument is empty
+        current_date = time.strftime("%Y%m%d_%H%M%S_vb.pdf")
+        # NOTE: WE TAKE THE FIRST ELEMENT OF THE PATH LIST
+        if os.path.isdir(path[0]):
+            pdf_path = os.path.join(path[0], current_date)
+        else:
+            path_dir = os.path.dirname(path[0])
+            pdf_path = os.path.join(path_dir, current_date)
 
     # If path does not exists, then let's report that
     if len(errored_paths):
@@ -115,7 +127,8 @@ def main():
         print ("Processing - {0}".format(_path))
         if not validate_input(_path):
             print ("WARNING: Cannot process the path, the format does not match"
-                   " the allowed formats. SKIPPING")
+                   " the allowed formats. SKIPPING...\n\n")
+            continue
         # Video Info object will be created for the video path
         video_data = VideoInfo(video_path=_path)
         video_info = video_data.videoprops

@@ -36,8 +36,11 @@ class VideoFrames(object):
 
         self.config = get_config()
         self.framecount = self.config.get("framecount")
-        self.scale = "x".join([str(int(float(item) * self.config.get("factor")))
-                               for item in self.resolution.split("x")])
+        x_res, y_res = self.resolution.split("x")
+        x_scale = int(float(x_res)* self.config.get("factor"))
+        y_scale = min(int(float(y_res)* self.config.get("factor")),
+                      self.config.get("min_height"))
+        self.scale = "{0}x{1}".format(x_scale, y_scale)
 
     def export_frames(self):
         """ Export frames from the video for the given resolution
@@ -63,9 +66,9 @@ class VideoFrames(object):
             raise RuntimeError("Invalid path for ffmpeg "
                                "command {0}".format(tool_cmd))
 
-        # We will be changing the height to -1 to maintain the aspect ratio
-        width, _ = self.scale.split("x")
-        updt_scale = "{0}:-1".format(width)
+        # We will be changing the width to -1 to maintain the aspect ratio
+        _, height = self.scale.split("x")
+        updt_scale = "-1:{0}".format(height)
 
         # Create the output directory
         output_dir = os.path.join(tempfile.gettempdir(),

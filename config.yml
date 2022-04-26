@@ -25,6 +25,9 @@ formats: [".mp4", ".mov"]
 factor: 0.1 # 1/10th the size of the actual resolution, 1920x1080 will
              # have 480x270 size thumnails
 
+# Minimum height of the thumbnail
+min_height: 141
+
 # how many frames you want to get out of the vidoe
 framecount: 5
 
