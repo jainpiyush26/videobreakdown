@@ -44,6 +44,21 @@ def get_config():
         config_data = yaml.safe_load(file_open)
     return config_data
 
+def validate_input(input_path):
+    """ Confirm if we can indeed process the path
+
+    Args:
+        input_path (`str`): video path
+    Returns:
+        `bool`: If the extention does not match the config, then it's invalid
+    """
+    valid_formats = get_config().get("formats")
+    path_ext = os.path.splitext(input_path)[-1]
+    if path_ext:
+        if path_ext.lower() in valid_formats:
+            return True
+
+    return False
 
 def get_dimensions(thumbnails):
     """ Get the maximum height and maximum width of

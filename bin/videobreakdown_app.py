@@ -11,7 +11,7 @@ from argparse import ArgumentParser
 from videobreakdown.videoinfo import VideoInfo
 from videobreakdown.videoframes import VideoFrames
 from videobreakdown.pdfcreator import PdfCreator
-from videobreakdown.base import OS, get_dimensions
+from videobreakdown.base import OS, get_dimensions, validate_input
 
 
 
@@ -113,6 +113,9 @@ def main():
     framepaths = []
     for _path in paths_to_proc:
         print ("Processing - {0}".format(_path))
+        if not validate_input(_path):
+            print ("WARNING: Cannot process the path, the format does not match"
+                   " the allowed formats. SKIPPING")
         # Video Info object will be created for the video path
         video_data = VideoInfo(video_path=_path)
         video_info = video_data.videoprops
