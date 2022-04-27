@@ -23,7 +23,7 @@ CONFIG_PATH = os.path.realpath(os.path.join(SELF_DIR_PATH, "../..", "appconfig.y
 GETTAGS_COMMAND = '"{toolpath}" -api largefilesupport=1 -args -T -{tags} "{video}" -j > \"{output}\"'
 # Frames export command
 EXPORT_FRAMES = "\"{ffmpeg_cmd}\" {hw_accel} -i \"{input}\" " \
-                "-crf 0 -vf scale={scale},select='{frameselect}' " \
+                "-crf 0 -vf {transpose}scale={scale},select='{frameselect}' " \
                 "-vsync 0 \"{output}\" -hide_banner -loglevel error"
 # Frames selection argument
 FRAMES_SEL = "eq(n\,{frame})"

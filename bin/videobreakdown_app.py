@@ -28,7 +28,7 @@ def _parse_arguments():
     export_pdf_help = "PDF File that the breakdown information should "\
                       "be exported to. If left empty, the folder path "\
                       "will be used. Name will be current time stamp."
-    args.add_argument("--export-path", "-e", dest="export", 
+    args.add_argument("--export-path", "-e", dest="export",
                       help=export_pdf_help)
 
     return args.parse_args()
@@ -133,21 +133,26 @@ def main():
         video_data = VideoInfo(video_path=_path)
         video_info = video_data.videoprops
         video_name = video_data.name
+
         print ("Information gathered for {0}".format(video_name))
         print ("Exporting frames...")
         # Let's export the frames
         frames_data = VideoFrames(video_path=_path,
                                   video_name=video_name,
                                   video_framecount=video_info.get("Frames"),
-                                  resolution=video_info.get("Resolution"))
+                                  resolution=video_info.get("Resolution"),
+                                  video_rotation=video_data.videorotation)
+
         frames_path = frames_data.export_frames()
         framepaths.append(frames_path)
         print ("Frames exporting and combining finished")
         # Store all this in the information
+        vertical = False if video_data.videorotation==0 else True
         frames_info_dict = dict(name=video_name,
                                 details=video_info,
                                 thumbnail=frames_path,
-                                scale=frames_data.scale)
+                                scale=frames_data.scale,
+                                vertical=vertical)
         # Insert into the pdf info list
         pdf_info_list.append(frames_info_dict)
 

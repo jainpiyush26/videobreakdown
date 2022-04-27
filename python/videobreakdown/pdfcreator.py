@@ -144,14 +144,19 @@ class PdfCreator(object):
             # Set the color
             self.canvas_obj.setFillColor(self.const.title_color)
             # Set the name
-            self.canvas_obj.drawString(x_pos, y_pos, video_detail["name"])
+            _name = video_detail["name"]
+            # Vertical video counter
+            vertical_video = video_detail.get("vertical")
+            if vertical_video:
+                _name = _name + " :(Vertical)"
+            self.canvas_obj.drawString(x_pos, y_pos, _name)
 
             # We have to move the y pos
             y_pos += self.const.titlefactor_y
 
             # We will start adding the images just after the title
             # so this is the thumbnails y value
-            thumb_y_pos = y_pos - self.const.linefactor_y
+            thumb_y_pos = y_pos - self.const.linefactor_y/2
             thumb_x_pos = self.const.thumbnail_x_pos
             _thumbnails = video_detail.get("thumbnail")
             _img = Image.open(_thumbnails)

@@ -19,7 +19,7 @@ class VideoFrames(object):
         object (_type_): _description_
     """
     def __init__(self, video_path, video_name, video_framecount,
-                 resolution):
+                 resolution, video_rotation):
         """ Initialization function
 
         Args:
@@ -33,6 +33,7 @@ class VideoFrames(object):
         self.name = video_name
         self.video_framecount = video_framecount
         self.resolution = resolution
+        self.rotation = video_rotation
 
         self.config = get_config()
         self.framecount = self.config.get("framecount")
@@ -83,13 +84,23 @@ class VideoFrames(object):
         # Do hardware acceleration
         _hrdwre_acc = self.config.get("hw_accel", "")
 
+        # Incase there is a rotation, we need to get the transpose value
+        # correct
+        if str(self.rotation) == "270":
+            transpose = "transpose=1,"
+        elif str(self.rotation) == "90":
+            transpose = "transpose=2,"
+        else:
+            transpose = ""
+
         # Build the export command
         export_cmd = EXPORT_FRAMES.format(ffmpeg_cmd=tool_cmd,
                                           input=self.video_path,
                                           scale=updt_scale,
                                           frameselect=frames_string,
                                           output=output_frames,
-                                          hw_accel=_hrdwre_acc)
+                                          hw_accel=_hrdwre_acc,
+                                          transpose=transpose)
 
         # Execute the command
         export_cmd_exec = Popen(export_cmd, stdout=PIPE,

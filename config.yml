@@ -48,6 +48,8 @@ tags:
   camera_specific:
     sony: AcquisitionRecordGroupItemValue
     canon: ColorSpace2
+  misc:
+    Rotation: Rotation # Is there a rotation applied to the video
 
 # USE HARDWARE ACCELERATION
 # Use only if you know what you are doing and have understanding

@@ -3,6 +3,7 @@
 import os
 import re
 from subprocess import Popen, PIPE, call
+from numpy import full
 import xxhash
 import tempfile
 import json
@@ -26,6 +27,7 @@ class VideoInfo(object):
         self.video_path = video_path
         self._hash_block = 65536
         self.configs = get_config()
+        self._videorotation = 0
 
     @property
     def hash(self):
@@ -79,6 +81,35 @@ class VideoInfo(object):
             `dict`: Property dict values
         """
         return self._process_video_props()
+
+    @property
+    def videorotation(self):
+        """_summary_
+
+        Raises:
+            RuntimeError: _description_
+            RuntimeError: _description_
+
+        Returns:
+            _type_: _description_
+        """
+        return self._videorotation
+
+    @videorotation.setter
+    def videorotation(self, value):
+        """
+
+        Args:
+            value (_type_): _description_
+
+        Raises:
+            RuntimeError: _description_
+            RuntimeError: _description_
+
+        Returns:
+            _type_: _description_
+        """
+        self._videorotation = value
 
     @property
     def name(self):
@@ -140,6 +171,7 @@ class VideoInfo(object):
         full_tags_dict = self.configs.get("tags")
         tags_dict = full_tags_dict.get("default")
         calculated_dict = full_tags_dict.get("calculated")
+        misc_dict = full_tags_dict.get("misc")
 
         # Get the camera type
         camera_list = full_tags_dict.get("camera_model")
@@ -158,6 +190,7 @@ class VideoInfo(object):
         tags_string = " -".join(tags_dict.keys())
         tags_string = tags_string + " -" + " -".join(camera_list)
         tags_string = tags_string + " -" + " -".join(color_tags)
+        tags_string = tags_string + " -" + " -".join(misc_dict.keys())
 
         output_file = tempfile.NamedTemporaryFile(delete=False)
         output_file.close()
@@ -189,7 +222,7 @@ class VideoInfo(object):
             if tag_value.get('val') != "-":
                 camera_model_values.append(tag_value.get('val'))
 
-        # Get the metadata tags for getting the color values 
+        # Get the metadata tags for getting the color values
         for _camera_name in color_tags_dict.keys():
             for _model in camera_model_values:
                 if re.match(_camera_name, _model, re.I):
@@ -201,11 +234,17 @@ class VideoInfo(object):
         for _key, _value in temp_property_data[0].items():
             # We use the more readable keys and ignore not required
             # values (like sourcename)
-            if _key not in tags_dict.keys():
+            if _key not in tags_dict.keys() \
+                and _key not in misc_dict.keys():
                 continue
-            keyvalue = _value.get('val')
 
-            property_data[tags_dict.get(_key)] = keyvalue
+            if _key in misc_dict.keys():
+                if _key == "Rotation":
+                    self.videorotation = _value.get('val')
+            else:
+                keyvalue = _value.get('val')
+                keyname = tags_dict.get(_key)
+                property_data[keyname] = keyvalue
 
         # We need to get the calculated values
         for key, values in calculated_dict.items():
