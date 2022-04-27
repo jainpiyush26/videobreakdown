@@ -34,7 +34,7 @@ def _parse_arguments():
     return args.parse_args()
 
 def _process_dirs(dir_path):
-    """_summary_
+    """ Process directories
 
     Args:
         dir_path (`str`): directory path to search the video files from

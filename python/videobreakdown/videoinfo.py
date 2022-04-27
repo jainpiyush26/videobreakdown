@@ -84,30 +84,22 @@ class VideoInfo(object):
 
     @property
     def videorotation(self):
-        """_summary_
-
-        Raises:
-            RuntimeError: _description_
-            RuntimeError: _description_
+        """ Video rotation property
 
         Returns:
-            _type_: _description_
+            `int`: video rotation values
         """
         return self._videorotation
 
     @videorotation.setter
     def videorotation(self, value):
-        """
+        """ Sets the video rotation value
 
         Args:
-            value (_type_): _description_
-
-        Raises:
-            RuntimeError: _description_
-            RuntimeError: _description_
+            value (`int`): Rotation value of the video
 
         Returns:
-            _type_: _description_
+            `int`: Rotation value
         """
         self._videorotation = value
 

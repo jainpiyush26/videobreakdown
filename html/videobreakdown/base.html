@@ -48,10 +48,10 @@ SELF_DIR_PATH = os.path.dirname(SELF_PATH)
 # Config path to be used in the applications
 CONFIG_PATH = os.path.realpath(os.path.join(SELF_DIR_PATH, &#34;../..&#34;, &#34;appconfig.yml&#34;))
 # What tags are to be used
-GETTAGS_COMMAND = &#39;&#34;{toolpath}&#34; -args -T -{tags} &#34;{video}&#34; -j &gt; \&#34;{output}\&#34;&#39;
+GETTAGS_COMMAND = &#39;&#34;{toolpath}&#34; -api largefilesupport=1 -args -T -{tags} &#34;{video}&#34; -j &gt; \&#34;{output}\&#34;&#39;
 # Frames export command
-EXPORT_FRAMES = &#34;{ffmpeg_cmd} {hw_accel} -i \&#34;{input}\&#34; &#34; \
-                &#34;-crf 0 -vf scale={scale},select=&#39;{frameselect}&#39; &#34; \
+EXPORT_FRAMES = &#34;\&#34;{ffmpeg_cmd}\&#34; {hw_accel} -i \&#34;{input}\&#34; &#34; \
+                &#34;-crf 0 -vf {transpose}scale={scale},select=&#39;{frameselect}&#39; &#34; \
                 &#34;-vsync 0 \&#34;{output}\&#34; -hide_banner -loglevel error&#34;
 # Frames selection argument
 FRAMES_SEL = &#34;eq(n\,{frame})&#34;
@@ -72,6 +72,21 @@ def get_config():
         config_data = yaml.safe_load(file_open)
     return config_data
 
+def validate_input(input_path):
+    &#34;&#34;&#34; Confirm if we can indeed process the path
+
+    Args:
+        input_path (`str`): video path
+    Returns:
+        `bool`: If the extention does not match the config, then it&#39;s invalid
+    &#34;&#34;&#34;
+    valid_formats = get_config().get(&#34;formats&#34;)
+    path_ext = os.path.splitext(input_path)[-1]
+    if path_ext:
+        if path_ext.lower() in valid_formats:
+            return True
+
+    return False
 
 def get_dimensions(thumbnails):
     &#34;&#34;&#34; Get the maximum height and maximum width of
@@ -332,6 +347,36 @@ the thumbnail paths from the list</p>
             maximum_height = _height
 
     return maximum_width , maximum_height</code></pre>
+</details>
+</dd>
+<dt id="videobreakdown.base.validate_input"><code class="name flex">
+<span>def <span class="ident">validate_input</span></span>(<span>input_path)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Confirm if we can indeed process the path</p>
+<h2 id="args">Args</h2>
+<p>input_path (<code>str</code>): video path</p>
+<h2 id="returns">Returns</h2>
+<p><code>bool</code>: If the extention does not match the config, then it's invalid</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def validate_input(input_path):
+    &#34;&#34;&#34; Confirm if we can indeed process the path
+
+    Args:
+        input_path (`str`): video path
+    Returns:
+        `bool`: If the extention does not match the config, then it&#39;s invalid
+    &#34;&#34;&#34;
+    valid_formats = get_config().get(&#34;formats&#34;)
+    path_ext = os.path.splitext(input_path)[-1]
+    if path_ext:
+        if path_ext.lower() in valid_formats:
+            return True
+
+    return False</code></pre>
 </details>
 </dd>
 </dl>
@@ -886,6 +931,7 @@ def width_buffer(self):
 <ul class="">
 <li><code><a title="videobreakdown.base.get_config" href="#videobreakdown.base.get_config">get_config</a></code></li>
 <li><code><a title="videobreakdown.base.get_dimensions" href="#videobreakdown.base.get_dimensions">get_dimensions</a></code></li>
+<li><code><a title="videobreakdown.base.validate_input" href="#videobreakdown.base.validate_input">validate_input</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>
