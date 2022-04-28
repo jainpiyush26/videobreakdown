@@ -20,7 +20,7 @@ There are certain python dependencies and 3rd part dependencies are needed. For 
 ### Python Version Dependency
 Version needed is: **Python 3.8+**
 
-> **NOTE**: The bat file (see below) will call the **python** command, please ensure this points to python3 app installed. Or you might have to change the bat file.
+> **NOTE**: The bat file (see below) will call the **python3** command, please ensure this points to python3 app installed. Or you might have to change the bat file.
 > **NOTE**: This code has not been tested with Python 2.X versions.
 
 ### "pip" install requirements
