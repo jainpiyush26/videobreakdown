@@ -39,7 +39,7 @@ class VideoFrames(object):
         self.framecount = self.config.get("framecount")
         x_res, y_res = self.resolution.split("x")
         x_scale = int(float(x_res)* self.config.get("factor"))
-        y_scale = min(int(float(y_res)* self.config.get("factor")),
+        y_scale = max(int(float(y_res)* self.config.get("factor")),
                       self.config.get("min_height"))
         self.scale = "{0}x{1}".format(x_scale, y_scale)
 
