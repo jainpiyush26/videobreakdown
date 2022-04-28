@@ -87,16 +87,17 @@ For your OS (windows, mac or linux) you will have to update the following enviro
 ---
 
 ## Running the application
-Here are the options that are available for the applications 
+Here are the options that are available for the applications. The only required argument is the *path*. In case you don't give the export path the folder component from the *path* is used and the *DDMMYY_HHMMSS_vb.pdf* will be created. 
 ```
-usage: Video Breakdown Code [-h] --path [PATH ...] --export-path EXPORT
+usage: Video Breakdown Code [-h] --path [PATH ...] [--export-path EXPORT]
 
 optional arguments:
   -h, --help            show this help message and exit
   --path [PATH ...], -p [PATH ...]
                         File(s) or Folder path that contains video files
   --export-path EXPORT, -e EXPORT
-                        PDF File that the breakdown information should be exported to.
+                        PDF File that the breakdown information should be exported to. If left empty, the folder path
+                        will be used. Name will be current time stamp.
 ```
 
 You can run the application by - 
