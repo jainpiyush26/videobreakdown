@@ -14,13 +14,17 @@ The details includes -
  - Frames
  - ColorSpace
 
+---
+
 ## Requisites
 There are certain python dependencies and 3rd part dependencies are needed. For the 3rd party softwares please keep the paths around, we will need to update the application's config file with that.
 
 ### Python Version Dependency
 Version needed is: **Python 3.8+**
+https://www.python.org/downloads/
 
 > **NOTE**: The bat file (see below) will call the **python3** command, please ensure this points to python3 app installed. Or you might have to change the bat file.
+
 > **NOTE**: This code has not been tested with Python 2.X versions.
 
 ### "pip" install requirements
@@ -43,6 +47,7 @@ Version needed is: **4.4.1+**
 
 > **NOTE**: For *Windows*, you can download the executable and copy the *ffmpeg* executable path
 
+---
 
 ## Usage
 Before we start using the code we have to setup a few things to be able to use the code properly
@@ -79,6 +84,8 @@ For your OS (windows, mac or linux) you will have to update the following enviro
  - PATH = <GIT_LOCATION>/bin
  - PYTHONPATH = <GIT_LOCATION>/python
 
+---
+
 ## Running the application
 Here are the options that are available for the applications 
 ```
@@ -95,9 +102,9 @@ optional arguments:
 You can run the application by - 
  - Open up *terminal* or *CMD*
  - *For Windows* (NOTE: calling from bat only gives you option to give one path only, folder or file)
- -- videobreakdown.bat <PATH> <EXPORTPATH>
+     - videobreakdown.bat PATH EXPORTPATH
  - *FOR MAC/LINUX*
- -- videobreakdown_app.py <PATH(s)> <EXPORTPATH>
+     - videobreakdown_app.py PATH(s) EXPORTPATH
 
 ### There are two arguments and they are honestly pretty straight forward
  - Path: This can be either a folder or a single path or multiple paths video paths
@@ -109,6 +116,8 @@ We have a few options that we can change in the config file
 - framecount : The amount of thumbnails 
 - factor : If the exported thumbnails scale needs to be changed
 - ***hw_accel : If you do not have a graphics card on your machine, this needs to be commented out***
+
+---
 
 ## Regeneration Help Files
 To regenerate the documentations you can run the following from your **<GIT_LOCATION>**
