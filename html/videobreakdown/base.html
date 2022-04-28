@@ -46,7 +46,8 @@ from reportlab.lib.colors import (darkblue,
 SELF_PATH = os.path.realpath(__file__)
 SELF_DIR_PATH = os.path.dirname(SELF_PATH)
 # Config path to be used in the applications
-CONFIG_PATH = os.path.realpath(os.path.join(SELF_DIR_PATH, &#34;../..&#34;, &#34;appconfig.yml&#34;))
+APP_CONFIG_PATH = os.path.realpath(os.path.join(SELF_DIR_PATH, &#34;../..&#34;, &#34;appconfig.yml&#34;))
+CONFIG_PATH = os.path.realpath(os.path.join(SELF_DIR_PATH, &#34;../..&#34;, &#34;config.yml&#34;))
 # What tags are to be used
 GETTAGS_COMMAND = &#39;&#34;{toolpath}&#34; -api largefilesupport=1 -args -T -{tags} &#34;{video}&#34; -j &gt; \&#34;{output}\&#34;&#39;
 # Frames export command
@@ -62,15 +63,47 @@ USERNAME = getpass.getuser()
 # Operating system
 OS = platform.system()
 
-def get_config():
+_CONFIG_DICT = dict()
+
+def _get_config():
     &#34;&#34;&#34; Read the YAML config for the application
 
     Returns:
         `dict`: Configuration details and data that will be used in the code
     &#34;&#34;&#34;
-    with open(CONFIG_PATH, &#34;r&#34;) as file_open:
+    with open(APP_CONFIG_PATH, &#34;r&#34;) as file_open:
         config_data = yaml.safe_load(file_open)
     return config_data
+
+def get_config():
+    &#34;&#34;&#34; Wrapper function around _get_config to get a singleton object
+
+    Returns:
+        `dict`: Configuration dictionary
+    &#34;&#34;&#34;
+    global _CONFIG_DICT
+
+    if not _CONFIG_DICT:
+        _CONFIG_DICT = _get_config()
+    else:
+        print (&#34;Calling the dict&#34;)
+
+    return _CONFIG_DICT
+
+def uptodate_app_config():
+    &#34;&#34;&#34; Check if the appconfig.yml version matches to the version entry in
+        config.yml
+
+    Returns:
+        `bool`: True if the version string matches else False
+    &#34;&#34;&#34;
+    app_config_version = get_config().get(&#34;version&#34;, &#34;v0.0.0&#34;)
+    with open(CONFIG_PATH, &#34;r&#34;) as file_open:
+        config_data = yaml.safe_load(file_open)
+    config_version = config_data.get(&#34;version&#34;)
+    if app_config_version != config_version:
+        return False
+    return True
 
 def validate_input(input_path):
     &#34;&#34;&#34; Confirm if we can indeed process the path
@@ -293,22 +326,27 @@ class PdfConstants(object):
 <span>def <span class="ident">get_config</span></span>(<span>)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Read the YAML config for the application</p>
+<div class="desc"><p>Wrapper function around _get_config to get a singleton object</p>
 <h2 id="returns">Returns</h2>
-<p><code>dict</code>: Configuration details and data that will be used in the code</p></div>
+<p><code>dict</code>: Configuration dictionary</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_config():
-    &#34;&#34;&#34; Read the YAML config for the application
+    &#34;&#34;&#34; Wrapper function around _get_config to get a singleton object
 
     Returns:
-        `dict`: Configuration details and data that will be used in the code
+        `dict`: Configuration dictionary
     &#34;&#34;&#34;
-    with open(CONFIG_PATH, &#34;r&#34;) as file_open:
-        config_data = yaml.safe_load(file_open)
-    return config_data</code></pre>
+    global _CONFIG_DICT
+
+    if not _CONFIG_DICT:
+        _CONFIG_DICT = _get_config()
+    else:
+        print (&#34;Calling the dict&#34;)
+
+    return _CONFIG_DICT</code></pre>
 </details>
 </dd>
 <dt id="videobreakdown.base.get_dimensions"><code class="name flex">
@@ -347,6 +385,34 @@ the thumbnail paths from the list</p>
             maximum_height = _height
 
     return maximum_width , maximum_height</code></pre>
+</details>
+</dd>
+<dt id="videobreakdown.base.uptodate_app_config"><code class="name flex">
+<span>def <span class="ident">uptodate_app_config</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Check if the appconfig.yml version matches to the version entry in
+config.yml</p>
+<h2 id="returns">Returns</h2>
+<p><code>bool</code>: True if the version string matches else False</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def uptodate_app_config():
+    &#34;&#34;&#34; Check if the appconfig.yml version matches to the version entry in
+        config.yml
+
+    Returns:
+        `bool`: True if the version string matches else False
+    &#34;&#34;&#34;
+    app_config_version = get_config().get(&#34;version&#34;, &#34;v0.0.0&#34;)
+    with open(CONFIG_PATH, &#34;r&#34;) as file_open:
+        config_data = yaml.safe_load(file_open)
+    config_version = config_data.get(&#34;version&#34;)
+    if app_config_version != config_version:
+        return False
+    return True</code></pre>
 </details>
 </dd>
 <dt id="videobreakdown.base.validate_input"><code class="name flex">
@@ -931,6 +997,7 @@ def width_buffer(self):
 <ul class="">
 <li><code><a title="videobreakdown.base.get_config" href="#videobreakdown.base.get_config">get_config</a></code></li>
 <li><code><a title="videobreakdown.base.get_dimensions" href="#videobreakdown.base.get_dimensions">get_dimensions</a></code></li>
+<li><code><a title="videobreakdown.base.uptodate_app_config" href="#videobreakdown.base.uptodate_app_config">uptodate_app_config</a></code></li>
 <li><code><a title="videobreakdown.base.validate_input" href="#videobreakdown.base.validate_input">validate_input</a></code></li>
 </ul>
 </li>

@@ -1,16 +1,17 @@
 #!/usr/bin/env python
 # std imports
 import os
-from pkgutil import get_data
 import time
 import subprocess
 from argparse import ArgumentParser
+import warnings
 
 # internal
 from videobreakdown.videoinfo import VideoInfo
 from videobreakdown.videoframes import VideoFrames
 from videobreakdown.pdfcreator import PdfCreator
-from videobreakdown.base import OS, get_dimensions, validate_input
+from videobreakdown.base import (OS, get_dimensions,
+                                 validate_input, uptodate_app_config)
 
 
 
@@ -76,6 +77,13 @@ def main():
         RuntimeError: _description_
         RuntimeError: _description_
     """
+    # First thing we check is does the app config matches or not!
+    if not uptodate_app_config():
+        print("WARNING: You need to make sure the appconfig.yml " \
+              "entries match the entries in the " \
+              "config.yml, please update with " \
+              "the necesssary changes.")
+        return
     arg = _parse_arguments()
     path = arg.path
     pdf_path = arg.export
@@ -157,6 +165,10 @@ def main():
         pdf_info_list.append(frames_info_dict)
 
         print ("="*80)
+
+    if len(pdf_info_list) == 0:
+        print ("Noting to export! Exiting the app.")
+        return
 
     # Let's start creating the PDF creator object
     print ("Exporting final PDF")

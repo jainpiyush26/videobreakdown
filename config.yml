@@ -1,4 +1,6 @@
 ---
+# What version of config we are using (we use the git tags for this)
+version: "v1.0.1"
 # Add in the details about the exiftool data per operating system
 tools:
   # We want the fully qualified paths and note relative paths

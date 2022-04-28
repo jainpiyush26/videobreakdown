@@ -18,7 +18,8 @@ from reportlab.lib.colors import (darkblue,
 SELF_PATH = os.path.realpath(__file__)
 SELF_DIR_PATH = os.path.dirname(SELF_PATH)
 # Config path to be used in the applications
-CONFIG_PATH = os.path.realpath(os.path.join(SELF_DIR_PATH, "../..", "appconfig.yml"))
+APP_CONFIG_PATH = os.path.realpath(os.path.join(SELF_DIR_PATH, "../..", "appconfig.yml"))
+CONFIG_PATH = os.path.realpath(os.path.join(SELF_DIR_PATH, "../..", "config.yml"))
 # What tags are to be used
 GETTAGS_COMMAND = '"{toolpath}" -api largefilesupport=1 -args -T -{tags} "{video}" -j > \"{output}\"'
 # Frames export command
@@ -34,15 +35,47 @@ USERNAME = getpass.getuser()
 # Operating system
 OS = platform.system()
 
-def get_config():
+_CONFIG_DICT = dict()
+
+def _get_config():
     """ Read the YAML config for the application
 
     Returns:
         `dict`: Configuration details and data that will be used in the code
     """
-    with open(CONFIG_PATH, "r") as file_open:
+    with open(APP_CONFIG_PATH, "r") as file_open:
         config_data = yaml.safe_load(file_open)
     return config_data
+
+def get_config():
+    """ Wrapper function around _get_config to get a singleton object
+
+    Returns:
+        `dict`: Configuration dictionary
+    """
+    global _CONFIG_DICT
+
+    if not _CONFIG_DICT:
+        _CONFIG_DICT = _get_config()
+    else:
+        print ("Calling the dict")
+
+    return _CONFIG_DICT
+
+def uptodate_app_config():
+    """ Check if the appconfig.yml version matches to the version entry in
+        config.yml
+
+    Returns:
+        `bool`: True if the version string matches else False
+    """
+    app_config_version = get_config().get("version", "v0.0.0")
+    with open(CONFIG_PATH, "r") as file_open:
+        config_data = yaml.safe_load(file_open)
+    config_version = config_data.get("version")
+    if app_config_version != config_version:
+        return False
+    return True
 
 def validate_input(input_path):
     """ Confirm if we can indeed process the path
