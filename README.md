@@ -20,6 +20,7 @@ There are certain python dependencies and 3rd part dependencies are needed. For 
 ### Python Version Dependency
 Version needed is: **Python 3.8+**
 
+> **NOTE**: The bat file (see below) will call the **python** command, please ensure this points to python3 app installed. Or you might have to change the bat file.
 > **NOTE**: This code has not been tested with Python 2.X versions.
 
 ### "pip" install requirements
@@ -90,6 +91,14 @@ optional arguments:
   --export-path EXPORT, -e EXPORT
                         PDF File that the breakdown information should be exported to.
 ```
+
+You can run the application by - 
+ - Open up *terminal* or *CMD*
+ - *For Windows* (NOTE: calling from bat only gives you option to give one path only, folder or file)
+ -- videobreakdown.bat <PATH> <EXPORTPATH>
+ - *FOR MAC/LINUX*
+ -- videobreakdown_app.py <PATH(s)> <EXPORTPATH>
+
 ### There are two arguments and they are honestly pretty straight forward
  - Path: This can be either a folder or a single path or multiple paths video paths
  - Export Path: PDF file that you want the PDF export to, it won't overwrite and will throw a runtime error if it already exists
