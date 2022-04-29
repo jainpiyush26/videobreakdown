@@ -2,6 +2,7 @@
 # std imports
 from json import tool
 import os
+import re
 import time
 import tempfile
 from subprocess import Popen, PIPE
@@ -108,7 +109,21 @@ class VideoFrames(object):
 
         _, std_err = export_cmd_exec.communicate()
         if not str(std_err, encoding="utf-8") == "":
-            raise RuntimeError(std_err)
+            if not (re.search("hwaccel initialisation returned error"), std_err):
+                raise RuntimeError(std_err)
+            # We try without any hardware acceleration!
+            export_cmd = EXPORT_FRAMES.format(ffmpeg_cmd=tool_cmd,
+                                          input=self.video_path,
+                                          scale=updt_scale,
+                                          frameselect=frames_string,
+                                          output=output_frames,
+                                          hw_accel="",
+                                          transpose=transpose)
+            export_cmd_exec = Popen(export_cmd, stdout=PIPE,
+                                    std_err=PIPE, shell=True)
+            _, std_err = export_cmd_exec.communicate()
+            if not str(std_err, encoding="utf-8") == "":
+                raise RuntimeError(std_err)
 
         # Combination image return
         output_image_comb = os.path.join(
