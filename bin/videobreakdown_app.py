@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 # std imports
+from calendar import c
 import os
 import time
+import datetime
 import subprocess
 from argparse import ArgumentParser
-import warnings
 
 # internal
 from videobreakdown.videoinfo import VideoInfo
@@ -13,6 +14,21 @@ from videobreakdown.pdfcreator import PdfCreator
 from videobreakdown.base import (OS, get_dimensions,
                                  validate_input, uptodate_app_config)
 
+DEBUG_COUNTER = os.environ.get("VIDEOBREAKDOWN_DEBUG")
+TIME_STAMP = time.time()
+
+
+def time_taken(msg_str):
+    """ Print time taken, 
+
+    Args:
+        msg_str (`str`): Message string and append to time taken
+    """
+    global TIME_STAMP
+    current_time = time.time()
+    time_taken = datetime.timedelta(seconds=current_time- TIME_STAMP)
+    print ("Processing time for {0} - {1}".format(msg_str, time_taken))
+    TIME_STAMP = current_time
 
 
 def _parse_arguments():
@@ -84,10 +100,13 @@ def main():
               "config.yml, please update with " \
               "the necesssary changes.")
         return
+    global TIME_STAMP
+    TIME_STAMP = time.time()
     arg = _parse_arguments()
     path = arg.path
     pdf_path = arg.export
 
+    # start time of the application 
     errored_paths = list()
     paths_to_proc = list()
 
@@ -141,7 +160,8 @@ def main():
         video_data = VideoInfo(video_path=_path)
         video_info = video_data.videoprops
         video_name = video_data.name
-
+        if DEBUG_COUNTER:
+            time_taken("Video frames processed.")
         print ("Information gathered for {0}".format(video_name))
         print ("Exporting frames...")
         # Let's export the frames
@@ -154,6 +174,8 @@ def main():
         frames_path = frames_data.export_frames()
         framepaths.append(frames_path)
         print ("Frames exporting and combining finished")
+        if DEBUG_COUNTER:
+            time_taken("Video frames exported and combined.")
         # Store all this in the information
         vertical = False if video_data.videorotation==0 else True
         frames_info_dict = dict(name=video_name,
@@ -176,6 +198,9 @@ def main():
                                     export_file_path=pdf_path,
                                     pdf_dimensions=get_dimensions(framepaths))
     pdf_creator_object.populate_pdf()
+    if DEBUG_COUNTER:
+        time_taken("PDF creation finished.")
+
     print ("PDF Exported to {0}".format(pdf_path))
 
     print ("Opening the PDF file")

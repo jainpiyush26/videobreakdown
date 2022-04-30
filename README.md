@@ -107,6 +107,10 @@ You can run the application by -
  - *FOR MAC/LINUX*
      - videobreakdown_app.py PATH(s) EXPORTPATH
 
+> **NOTE**: You can use **VIDEOBREAKDOWN_DEBUG** environment variable to start printing time stamps. (use *set* or *export* in your commandline or terminal respectively)
+
+> **IMPORTANT**: In case of a configuration change, the application will warn you that you should copy *config.yml* > *appconfig.yml* and reset your local changes (exiftool/ffmpeg locations)
+
 ### There are two arguments and they are honestly pretty straight forward
  - Path: This can be either a folder or a single path or multiple paths video paths
  - Export Path: PDF file that you want the PDF export to, it won't overwrite and will throw a runtime error if it already exists

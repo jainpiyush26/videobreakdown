@@ -57,8 +57,6 @@ def get_config():
 
     if not _CONFIG_DICT:
         _CONFIG_DICT = _get_config()
-    else:
-        print ("Calling the dict")
 
     return _CONFIG_DICT
 
