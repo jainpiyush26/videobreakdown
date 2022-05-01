@@ -132,7 +132,6 @@ def main():
         # Let's check if the path already exists or not
         if os.path.exists(pdf_path):
             raise RuntimeError("Path {0} already exists.".format(pdf_path))
-
     else:
         # If the pdf path argument is empty
         current_date = time.strftime("%Y%m%d_%H%M%S_vb.pdf")
@@ -143,6 +142,10 @@ def main():
             path_dir = os.path.dirname(path[0])
             pdf_path = os.path.join(path_dir, current_date)
 
+    # Set the error output name
+    _pdf_name_details = os.path.splitext(pdf_path)
+    error_output = _pdf_name_details[0] + "_ERRORS.txt"
+
     # If path does not exists, then let's report that
     if len(errored_paths):
         raise RuntimeError("Following paths do not exists"
@@ -150,29 +153,45 @@ def main():
 
     # store the framepaths
     framepaths = []
+    # store the skipped or errored paths
+    export_errors = dict()
     for _path in paths_to_proc:
         print ("Processing - {0}".format(_path))
         if not validate_input(_path):
-            print ("WARNING: Cannot process the path, the format does not match"
+            print ("WARNING: Cannot process the path, format does not match"
                    " the allowed formats. SKIPPING...\n\n")
             continue
-        # Video Info object will be created for the video path
-        video_data = VideoInfo(video_path=_path)
-        video_info = video_data.videoprops
-        video_name = video_data.name
+        try:
+            # Video Info object will be created for the video path
+            video_data = VideoInfo(video_path=_path)
+            video_info = video_data.videoprops
+            video_name = video_data.name
+        except Exception as e:
+            print ("WARNING: Can't get video info {0}, check error" \
+                   " output file for details.".format(_path))
+            export_errors[_path] = str(e)
+            continue
+
         if DEBUG_COUNTER:
             time_taken("Video frames processed.")
         print ("Information gathered for {0}".format(video_name))
         print ("Exporting frames...")
         # Let's export the frames
-        frames_data = VideoFrames(video_path=_path,
-                                  video_name=video_name,
-                                  video_framecount=video_info.get("Frames"),
-                                  resolution=video_info.get("Resolution"),
-                                  video_rotation=video_data.videorotation)
+        try:
+            frames_data = VideoFrames(video_path=_path,
+                                    video_name=video_name,
+                                    video_framecount=video_info.get("Frames"),
+                                    resolution=video_info.get("Resolution"),
+                                    video_rotation=video_data.videorotation)
 
-        frames_path = frames_data.export_frames()
-        framepaths.append(frames_path)
+            frames_path = frames_data.export_frames()
+            framepaths.append(frames_path)
+        except Exception as e:
+            print ("WARNING: Can't export video frames {0}, check error" \
+                   " output file for details.".format(_path))
+            export_errors[_path] = str(e)
+            continue
+
         print ("Frames exporting and combining finished")
         if DEBUG_COUNTER:
             time_taken("Video frames exported and combined.")
@@ -194,16 +213,35 @@ def main():
 
     # Let's start creating the PDF creator object
     print ("Exporting final PDF")
-    pdf_creator_object = PdfCreator(video_details=pdf_info_list,
-                                    export_file_path=pdf_path,
-                                    pdf_dimensions=get_dimensions(framepaths))
-    pdf_creator_object.populate_pdf()
+    try:
+        pdf_creator_object = PdfCreator(video_details=pdf_info_list,
+                                        export_file_path=pdf_path,
+                                        pdf_dimensions=get_dimensions(framepaths))
+        pdf_creator_object.populate_pdf()
+    except Exception as e:
+        print ("ERROR: PDF exporting failed!")
+        raise
+
     if DEBUG_COUNTER:
         time_taken("PDF creation finished.")
+
+    # If we have errored frames then let's print export them in a text file
+    if len(export_errors.keys()) > 0:
+        _final_error_string = ""
+        for path, error_str in export_errors.items():
+            _final_error_string += "{0} - {1}".format(path, error_str)
+            _final_error_string += "\n\n" + "*"*80 + "\n\n"
+
+        with open(error_output, "w") as file_open:
+            file_open.write(_final_error_string)
+
+        print ("NOTE: Please look at \"{0}\" for full details about" \
+               " errors".format(error_output))
 
     print ("PDF Exported to {0}".format(pdf_path))
 
     print ("Opening the PDF file")
+
     _open_pdf(pdf_path=pdf_path)
 
 if __name__ == "__main__":
