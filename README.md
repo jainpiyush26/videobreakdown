@@ -106,6 +106,8 @@ You can run the application by -
      - videobreakdown.bat PATH EXPORTPATH
  - *FOR MAC/LINUX*
      - videobreakdown_app.py PATH(s) EXPORTPATH
+ - If there are *errors* when processing the path, the code will skip the path. It will display the path 
+   of the text file. This is kept along with the .pdf file generated for ease of access.
 
 > **NOTE**: You can use **VIDEOBREAKDOWN_DEBUG** environment variable to start printing time stamps. (use *set* or *export* in your commandline or terminal respectively)
 
